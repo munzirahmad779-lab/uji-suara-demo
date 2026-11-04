@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kartu Hafalan — Set 4, Kumpulan Tumbuh, Acak Tanpa API</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 0; background: #0f2e30; color: #f3ead8; }
+  main { max-width: 680px; margin: 0 auto; padding: 20px 16px 44px; }
+  h1 { font-size: 22px; margin: 8px 0 4px; }
+  p.sub { color: #cfe0da; font-size: 14px; line-height: 1.5; }
+  .kotak { background: #fff; color: #14343a; border-radius: 14px; padding: 16px; margin-top: 14px; }
+  textarea { width: 100%; box-sizing: border-box; min-height: 150px; padding: 10px; font-size: 15px; border: 2px solid #bcd2cb; border-radius: 10px; }
+  button.aksi { padding: 12px 16px; font-size: 15px; font-weight: 700; border: 0; border-radius: 10px; background: #1F4A4E; color: #fff; cursor: pointer; }
+  button.aksi.sekunder { background: #e8f0ec; color: #1F4A4E; border: 2px solid #1F4A4E; }
+  button.aksi:disabled { opacity: .5; }
+  .baris { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  #info { font-size: 15px; font-weight: 700; color: #1F4A4E; }
+  #timer { font-size: 26px; font-weight: 800; color: #1F4A4E; }
+  .kisi { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .kartu { border: 2px solid #1F4A4E; border-radius: 12px; padding: 14px 10px; text-align: center; background: #fdfaf2; }
+  .kartu .a { font-size: 30px; }
+  .kartu .b { font-size: 16px; color: #1F4A4E; font-weight: 700; margin-top: 4px; }
+  .kartu.tutup { background: #1F4A4E; color: #ffd98a; cursor: pointer; min-height: 74px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; }
+  .kartu.lulus { opacity: .45; }
+  #panggung { text-align: center; margin-top: 8px; }
+  #soalBesar { font-size: 40px; margin: 12px 0 2px; }
+  #petunjuk { font-size: 14px; color: #6b4e12; }
+  #jawabanBesar { font-size: 26px; color: #1F4A4E; font-weight: 700; min-height: 36px; margin-top: 8px; }
+  #status { font-size: 14px; margin-top: 12px; min-height: 20px; color: #1F4A4E; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Kartu Hafalan</h1>
+  <p class="sub">Isi daftar kosakata di bawah (satu baris satu kartu: tulisan = arti), berapa pun
+  jumlahnya. Sistem membaginya sendiri menjadi set 4 kartu. Tiap set dihafalkan dulu, lalu
+  diuji dalam kumpulan yang tumbuh: 4, lalu 8, lalu 12, dan seterusnya. Pada tahap uji, kartu
+  tertutup dan dibuka satu-satu; sisi yang tampil diacak setiap kali dibuka, kadang tulisannya,
+  kadang artinya. Semua acakan berjalan di perangkat ini dengan acak bawaan browser,
+  tanpa API dan tanpa internet.</p>
+
+  <div class="kotak" id="kotakIsi">
+    <label for="daftar" style="font-size:13px;font-weight:600">Daftar kartu, format: tulisan = arti</label>
+    <textarea id="daftar" dir="auto">كِتَابٌ = buku
+بَيْتٌ = rumah
+مَدْرَسَةٌ = sekolah
+قَلَمٌ = pena
+بَابٌ = pintu
+نَافِذَةٌ = jendela
+سَبُّورَةٌ = papan tulis
+كُرْسِيٌّ = kursi
+حَقِيبَةٌ = tas
+دَفْتَرٌ = buku tulis
+مَكْتَبٌ = meja
+مَسْجِدٌ = masjid</textarea>
+    <div class="baris">
+      <button class="aksi" id="btnMulai">Mulai Sesi</button>
+    </div>
+    <div id="status">12 kartu contoh terisi. Tekan Mulai Sesi, atau ganti dulu daftarnya dengan kosakata dars apa pun.</div>
+  </div>
+
+  <div class="kotak" id="kotakSesi" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+      <div id="info"></div>
+      <div id="timer"></div>
+    </div>
+
+    <div id="areaBelajar">
+      <div class="kisi" id="kisiBelajar"></div>
+      <div class="baris">
+        <button class="aksi" id="btnLanjutReview">Sudah Hafal, Uji Sekarang</button>
+      </div>
+    </div>
+
+    <div id="areaReview" style="display:none">
+      <div id="panggung">
+        <div id="petunjuk"></div>
+        <div id="soalBesar"></div>
+        <div id="jawabanBesar"></div>
+        <div class="baris" style="justify-content:center">
+          <button class="aksi" id="btnBukaJawaban" style="display:none">Buka Jawabannya</button>
+          <button class="aksi" id="btnBenar" style="display:none">Saya Benar</button>
+          <button class="aksi sekunder" id="btnSalah" style="display:none">Masih Salah</button>
+        </div>
+      </div>
+      <div class="kisi" id="kisiReview"></div>
+    </div>
+
+    <div id="statusSesi" style="font-size:14px;margin-top:12px;min-height:20px;color:#1F4A4E"></div>
+    <div class="baris">
+      <button class="aksi sekunder" id="btnUlang">Akhiri dan Ubah Daftar</button>
+    </div>
+  </div>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const arab = t => /[\u0600-\u06FF]/.test(t);
+const acak = n => Math.floor(Math.random() * n);
+function kocok(arr) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = acak(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+let kartu = [];       // {a, b, benar, lulus}
+let setKe = 0;         // indeks set berjalan
+let setUkuran = 4;
+let antre = [];        // antre review: indeks kartu dalam kumpulan
+let aktif = -1;        // kartu yang sedang dibuka
+let sisiSoal = "a";    // sisi yang ditampilkan sebagai soal
+let jawabanTerbuka = false;
+let sisaBelajar = 180, jamBelajar = null;
+
+function kumpulanSampaiSet() { return kartu.slice(0, Math.min(kartu.length, (setKe + 1) * setUkuran)); }
+function infoTeks() {
+  const k = kumpulanSampaiSet();
+  const lulus = k.filter(c => c.lulus).length;
+  return "Set " + (setKe + 1) + " dari " + Math.ceil(kartu.length / setUkuran) +
+    " · Kumpulan " + k.length + " kartu · Lulus " + lulus + " dari " + k.length;
+}
+
+function mulaiSesi() {
+  const baris = $("daftar").value.split("\n").map(s => s.trim()).filter(Boolean);
+  kartu = baris.map(b => {
+    const p = b.split("=");
+    return { a: (p[0] || "").trim(), b: (p.slice(1).join("=") || "").trim(), benar: 0, lulus: false };
+  }).filter(c => c.a && c.b);
+  if (kartu.length < 2) { $("status").textContent = "Isi dulu minimal 2 kartu dengan format tulisan = arti."; return; }
+  setKe = 0;
+  $("kotakIsi").style.display = "none";
+  $("kotakSesi").style.display = "";
+  mulaiBelajar();
+}
+
+function mulaiBelajar() {
+  clearInterval(jamBelajar);
+  $("areaBelajar").style.display = "";
+  $("areaReview").style.display = "none";
+  $("info").textContent = infoTeks();
+  const setIni = kartu.slice(setKe * setUkuran, Math.min(kartu.length, (setKe + 1) * setUkuran));
+  $("kisiBelajar").innerHTML = "";
+  setIni.forEach(c => {
+    const d = document.createElement("div");
+    d.className = "kartu";
+    d.innerHTML = "";
+    const a = document.createElement("div"); a.className = "a"; a.textContent = c.a; if (arab(c.a)) a.dir = "rtl";
+    const b = document.createElement("div"); b.className = "b"; b.textContent = c.b;
+    d.appendChild(a); d.appendChild(b);
+    $("kisiBelajar").appendChild(d);
+  });
+  sisaBelajar = 180;
+  $("timer").textContent = "03:00";
+  $("statusSesi").textContent = "Tahap hafal: perhatikan " + setIni.length + " kartu ini. Sesudah siap, tutup dengan tombol Uji Sekarang.";
+  jamBelajar = setInterval(() => {
+    if (sisaBelajar > 0) {
+      sisaBelajar--;
+      $("timer").textContent = String(Math.floor(sisaBelajar / 60)).padStart(2, "0") + ":" + String(sisaBelajar % 60).padStart(2, "0");
+    } else { clearInterval(jamBelajar); mulaiReview(); }
+  }, 1000);
+}
+
+function mulaiReview() {
+  clearInterval(jamBelajar);
+  $("timer").textContent = "";
+  $("areaBelajar").style.display = "none";
+  $("areaReview").style.display = "";
+  const k = kumpulanSampaiSet();
+  antre = kocok(k.map((_, i) => i).filter(i => !k[i].lulus));
+  aktif = -1; jawabanTerbuka = false;
+  $("info").textContent = infoTeks();
+  gambarKisiReview();
+  $("statusSesi").textContent = "Tahap uji: buka satu kartu tertutup. Sisi yang tampil diacak setiap kali dibuka. Jawab dulu dari ingatan, baru buka jawabannya, lalu nilai sendiri.";
+  $("petunjuk").textContent = "Pilih satu kartu tertutup di bawah.";
+  $("soalBesar").textContent = "";
+  $("jawabanBesar").textContent = "";
+  $("btnBukaJawaban").style.display = "none";
+  $("btnBenar").style.display = "none";
+  $("btnSalah").style.display = "none";
+}
+
+function gambarKisiReview() {
+  const k = kumpulanSampaiSet();
+  $("kisiReview").innerHTML = "";
+  k.forEach((c, i) => {
+    const d = document.createElement("div");
+    if (c.lulus) { d.className = "kartu lulus"; d.textContent = "Lulus"; }
+    else {
+      d.className = "kartu tutup";
+      d.textContent = "Kartu ?";
+      d.onclick = () => bukaKartu(i);
+    }
+    $("kisiReview").appendChild(d);
+  });
+}
+
+function bukaKartu(i) {
+  aktif = i; jawabanTerbuka = false;
+  sisiSoal = Math.random() < 0.5 ? "a" : "b";
+  const c = kartu[i];
+  const soal = sisiSoal === "a" ? c.a : c.b;
+  const el = $("soalBesar");
+  el.textContent = soal;
+  el.dir = arab(soal) ? "rtl" : "ltr";
+  $("petunjuk").textContent = sisiSoal === "a" ? "Apa artinya?" : "Apa tulisan aslinya?";
+  $("jawabanBesar").textContent = "";
+  $("btnBukaJawaban").style.display = "";
+  $("btnBenar").style.display = "none";
+  $("btnSalah").style.display = "none";
+  $("statusSesi").textContent = "Kartu dibuka dari sisi " + (sisiSoal === "a" ? "tulisan" : "arti") + ". Jawab dari ingatan dulu.";
+}
+
+$("btnBukaJawaban").onclick = () => {
+  if (aktif < 0) return;
+  jawabanTerbuka = true;
+  const c = kartu[aktif];
+  $("jawabanBesar").textContent = sisiSoal === "a" ? c.b : c.a;
+  $("jawabanBesar").dir = arab($("jawabanBesar").textContent) ? "rtl" : "ltr";
+  $("btnBukaJawaban").style.display = "none";
+  $("btnBenar").style.display = "";
+  $("btnSalah").style.display = "";
+};
+
+function nilai(benar) {
+  if (aktif < 0 || !jawabanTerbuka) return;
+  const c = kartu[aktif];
+  const posDiAntre = antre.indexOf(aktif);
+  if (posDiAntre !== -1) antre.splice(posDiAntre, 1);
+  if (benar) {
+    c.benar++;
+    if (c.benar >= 2) c.lulus = true;
+    else antre.push(aktif);
+    $("statusSesi").textContent = benar && c.lulus ? "Kartu itu lulus dari kumpulan." : "Benar. Kartu itu akan muncul sekali lagi nanti untuk mengunci.";
+  } else {
+    c.benar = 0;
+    antre.splice(Math.min(2, antre.length), 0, aktif);
+    $("statusSesi").textContent = "Masih salah. Kartu itu kembali muncul beberapa giliran lagi.";
+  }
+  aktif = -1; jawabanTerbuka = false;
+  $("soalBesar").textContent = "";
+  $("jawabanBesar").textContent = "";
+  $("petunjuk").textContent = "Pilih satu kartu tertutup di bawah.";
+  $("btnBukaJawaban").style.display = "none";
+  $("btnBenar").style.display = "none";
+  $("btnSalah").style.display = "none";
+  $("info").textContent = infoTeks();
+  gambarKisiReview();
+  const k = kumpulanSampaiSet();
+  if (k.every(c => c.lulus)) {
+    if ((setKe + 1) * setUkuran >= kartu.length) {
+      $("statusSesi").textContent = "Selesai. Seluruh " + kartu.length + " kartu lulus uji campuran. Besok, kumpulan ini yang dibuka lebih dulu sebelum kartu baru.";
+      $("petunjuk").textContent = "Sesi tuntas.";
+    } else {
+      setKe++;
+      $("statusSesi").textContent = "Kumpulan lulus semua. Lanjut ke set berikutnya, kumpulan akan tumbuh.";
+      mulaiBelajar();
+    }
+  }
+}
+$("btnBenar").onclick = () => nilai(true);
+$("btnSalah").onclick = () => nilai(false);
+$("btnMulai").onclick = mulaiSesi;
+$("btnLanjutReview").onclick = mulaiReview;
+$("btnUlang").onclick = () => { clearInterval(jamBelajar); $("kotakSesi").style.display = "none"; $("kotakIsi").style.display = ""; };
+</script>
+</body>
+</html>
