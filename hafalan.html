@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jalur Hafalan — 4 Kosakata, 3 Menit</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 0; background: #0f2e30; color: #f3ead8; }
+  main { max-width: 640px; margin: 0 auto; padding: 20px 16px 44px; }
+  h1 { font-size: 22px; margin: 8px 0 4px; }
+  p.sub { color: #cfe0da; font-size: 14px; line-height: 1.5; }
+  .kotak { background: #fff; color: #14343a; border-radius: 14px; padding: 16px; margin-top: 14px; }
+  .timerbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  #timer { font-size: 30px; font-weight: 800; color: #1F4A4E; min-width: 92px; }
+  .tahap { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+  .tahap button { flex: 1 1 22%; padding: 9px 4px; font-size: 13px; font-weight: 700; border-radius: 9px; border: 2px solid #1F4A4E; background: #e8f0ec; color: #1F4A4E; cursor: pointer; }
+  .tahap button.aktif { background: #1F4A4E; color: #fff; }
+  #saran { font-size: 13px; color: #6b4e12; background: #fdf3e0; border-radius: 8px; padding: 8px 10px; margin-top: 10px; }
+  .kata-besar { font-size: 52px; text-align: center; margin: 18px 0 2px; color: #14343a; }
+  .arti { font-size: 20px; text-align: center; color: #1F4A4E; font-weight: 700; min-height: 28px; }
+  .arti.sembunyi { color: #9db8b2; font-weight: 400; font-size: 15px; }
+  .pecahan { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+  .pecahan span { background: #fdf3e0; border: 1.5px solid #d9a441; color: #6b4e12; border-radius: 999px; padding: 5px 12px; font-size: 16px; }
+  .baris { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  button.aksi { flex: 1 1 30%; padding: 13px 8px; font-size: 15px; font-weight: 700; border: 0; border-radius: 10px; background: #1F4A4E; color: #fff; cursor: pointer; }
+  button.aksi.sekunder { background: #e8f0ec; color: #1F4A4E; border: 2px solid #1F4A4E; }
+  button.aksi:disabled { opacity: .5; }
+  .nav { display: flex; gap: 8px; margin-top: 12px; }
+  .nav button { flex: 1; }
+  .titik { display: flex; gap: 6px; justify-content: center; margin-top: 10px; }
+  .titik span { width: 10px; height: 10px; border-radius: 50%; background: #bcd2cb; }
+  .titik span.aktif { background: #d9a441; }
+  #status { font-size: 14px; margin-top: 12px; min-height: 20px; color: #1F4A4E; }
+  .opsi { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .opsi button { padding: 14px 8px; font-size: 16px; font-weight: 700; border-radius: 10px; border: 2px solid #1F4A4E; background: #fff; color: #1F4A4E; cursor: pointer; }
+  .opsi button.benar { background: #1F4A4E; color: #fff; }
+  .opsi button.salah { background: #f6d7d7; border-color: #b3261e; color: #b3261e; }
+  #hasilTes { font-size: 15px; line-height: 1.6; margin-top: 12px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Jalur Hafalan</h1>
+  <p class="sub">Sesi menghafal 4 kosakata dalam 3 menit, lalu tes langsung, mengikuti cara
+  mengajar di kelas: kenalan dulu, ulangi, ingat tanpa petunjuk, baru dibuktikan.
+  Semua bunyi di halaman ini berkas suara biasa (mp3) yang sudah jadi, tidak ada mesin
+  yang berjalan di HP, jadi halaman ini ringan dan bisa dibuka di perangkat apa pun.</p>
+
+  <div class="kotak">
+    <div class="timerbar">
+      <div id="timer">03:00</div>
+      <button class="aksi" id="btnTimer" style="flex:0 1 auto">Mulai 3 Menit</button>
+      <button class="aksi sekunder" id="btnTimerReset" style="flex:0 1 auto">Atur Ulang</button>
+    </div>
+    <div id="saran">Tekan Mulai 3 Menit. Tahap berganti mengikuti waktu: Kenalan, Ulangi, Ingat, lalu Tes.</div>
+    <div class="tahap" id="tahapBaris">
+      <button data-tahap="kenalan" class="aktif">1. Kenalan</button>
+      <button data-tahap="ulangi">2. Ulangi</button>
+      <button data-tahap="ingat">3. Ingat</button>
+      <button data-tahap="tes">4. Tes</button>
+    </div>
+
+    <div id="areaKartu">
+      <div class="kata-besar" id="kataBesar" dir="rtl">...</div>
+      <div class="arti" id="arti"></div>
+      <div class="pecahan" id="pecahan"></div>
+      <div class="baris">
+        <button class="aksi" id="btnKata">Bunyikan Kata</button>
+        <button class="aksi sekunder" id="btnSuku">Per Suku Kata</button>
+        <button class="aksi sekunder" id="btnEja">Eja Nama Huruf</button>
+      </div>
+      <div class="baris">
+        <button class="aksi sekunder" id="btnTampilArti">Tampilkan Arti</button>
+      </div>
+      <div class="nav">
+        <button class="aksi sekunder" id="btnSebelum">Sebelumnya</button>
+        <button class="aksi sekunder" id="btnBerikut">Berikutnya</button>
+      </div>
+      <div class="titik" id="titik"></div>
+    </div>
+
+    <div id="areaTes" style="display:none">
+      <div class="kata-besar" id="kataTes" dir="rtl">...</div>
+      <div class="baris">
+        <button class="aksi" id="btnKataTes">Bunyikan Kata Ini</button>
+      </div>
+      <div class="opsi" id="opsiTes"></div>
+      <div id="hasilTes"></div>
+    </div>
+
+    <div id="status">Memuat paket kosakata...</div>
+  </div>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const ARTI = { "w1": "buku", "w2": "rumah", "w3": "sekolah", "w4": "pena" };
+let KATA = [], idx = 0, tahap = "kenalan", artiTerbuka = true;
+let sisa = 180, jalan = false, jam = null;
+let tesIdx = 0, tesBenar = 0, tesSalahKata = [], tesSelesai = false;
+
+const pemain = new Audio();
+let antre = [], ke = 0, labelPutar = "";
+function putarDaftar(files, label) {
+  antre = files; ke = 0; labelPutar = label;
+  if (!antre.length) return;
+  $("status").textContent = label + " — memutar " + antre.length + " klip...";
+  pemain.src = antre[0];
+  pemain.play().catch(() => { $("status").textContent = label + " — ketuk sekali lagi untuk memutar."; });
+}
+pemain.addEventListener("ended", () => {
+  ke++;
+  if (ke < antre.length) { pemain.src = antre[ke]; pemain.play().catch(() => {}); }
+  else $("status").textContent = labelPutar + " selesai.";
+});
+
+function gambarKartu() {
+  const w = KATA[idx];
+  if (!w) return;
+  $("kataBesar").textContent = w.kata;
+  const tampilArti = tahap !== "ingat" || artiTerbuka;
+  $("arti").textContent = tampilArti ? ARTI[w.id] : "Arti disembunyikan. Coba ingat dulu, lalu tampilkan untuk memeriksa.";
+  $("arti").className = "arti" + (tampilArti ? "" : " sembunyi");
+  $("btnTampilArti").style.display = tahap === "ingat" ? "" : "none";
+  $("pecahan").innerHTML = "";
+  w.pecahan.forEach(p => { const s = document.createElement("span"); s.textContent = p; $("pecahan").appendChild(s); });
+  $("titik").innerHTML = "";
+  KATA.forEach((_, i) => { const s = document.createElement("span"); if (i === idx) s.className = "aktif"; $("titik").appendChild(s); });
+  $("areaKartu").style.display = tahap === "tes" ? "none" : "";
+  $("areaTes").style.display = tahap === "tes" ? "" : "none";
+  document.querySelectorAll("#tahapBaris button").forEach(b => b.classList.toggle("aktif", b.dataset.tahap === tahap));
+  if (tahap === "tes") gambarTes();
+}
+function aturTahap(t) {
+  tahap = t;
+  artiTerbuka = t !== "ingat";
+  if (t === "tes") { tesIdx = 0; tesBenar = 0; tesSalahKata = []; tesSelesai = false; $("hasilTes").innerHTML = ""; }
+  gambarKartu();
+  $("status").textContent = "Tahap: " + t + ".";
+}
+document.querySelectorAll("#tahapBaris button").forEach(b => b.onclick = () => aturTahap(b.dataset.tahap));
+$("btnSebelum").onclick = () => { idx = (idx + KATA.length - 1) % KATA.length; artiTerbuka = tahap !== "ingat"; gambarKartu(); };
+$("btnBerikut").onclick = () => { idx = (idx + 1) % KATA.length; artiTerbuka = tahap !== "ingat"; gambarKartu(); };
+$("btnTampilArti").onclick = () => { artiTerbuka = true; gambarKartu(); };
+$("btnKata").onclick = () => putarDaftar(KATA[idx].modes.kata, "Kata utuh");
+$("btnSuku").onclick = () => putarDaftar(KATA[idx].modes.suku, "Per suku kata");
+$("btnEja").onclick = () => putarDaftar(KATA[idx].modes.eja, "Eja nama huruf");
+
+function gambarTes() {
+  if (tesSelesai) return;
+  const w = KATA[tesIdx];
+  $("kataTes").textContent = w.kata;
+  const opsi = KATA.map(k => ARTI[k.id]);
+  $("opsiTes").innerHTML = "";
+  opsi.forEach(a => {
+    const b = document.createElement("button");
+    b.textContent = a;
+    b.onclick = () => jawabTes(b, a);
+    $("opsiTes").appendChild(b);
+  });
+  $("status").textContent = "Tes: kata " + (tesIdx + 1) + " dari " + KATA.length + ". Pilih artinya.";
+}
+function jawabTes(tombol, pilihan) {
+  const w = KATA[tesIdx];
+  const benar = pilihan === ARTI[w.id];
+  if (benar) { tesBenar++; tombol.className = "benar"; }
+  else { tesSalahKata.push(w.kata); tombol.className = "salah"; }
+  [...$("opsiTes").children].forEach(b => b.disabled = true);
+  setTimeout(() => {
+    tesIdx++;
+    if (tesIdx < KATA.length) gambarKartu();
+    else {
+      tesSelesai = true;
+      const hariIni = new Date().toISOString().slice(0, 10);
+      try {
+        const simpan = JSON.parse(localStorage.getItem("jalur-hafalan-v1") || "{}");
+        simpan[hariIni] = { benar: tesBenar, salahKata: tesSalahKata };
+        localStorage.setItem("jalur-hafalan-v1", JSON.stringify(simpan));
+      } catch {}
+      $("hasilTes").innerHTML = "Hasil tes: <b>" + tesBenar + " dari " + KATA.length + " benar</b>." +
+        (tesSalahKata.length ? " Yang masih salah dan jadi ulangan besok: " + tesSalahKata.join("، ") + "." : " Semua benar. Besok kata-kata ini diuji lagi sekali untuk mengunci status hafal.");
+      $("opsiTes").innerHTML = "";
+      $("kataTes").textContent = "Selesai";
+      $("status").textContent = "Tes selesai.";
+    }
+  }, 700);
+}
+$("btnKataTes").onclick = () => { if (!tesSelesai) putarDaftar(KATA[tesIdx].modes.kata, "Kata utuh"); };
+
+function tampilTimer() {
+  const m = String(Math.floor(sisa / 60)).padStart(2, "0");
+  const d = String(sisa % 60).padStart(2, "0");
+  $("timer").textContent = m + ":" + d;
+}
+function saranOtomatis() {
+  const lewat = 180 - sisa;
+  if (sisa <= 0) return "Waktu habis. Lanjut ke tahap Tes untuk membuktikan hafalan.";
+  if (lewat < 80) return "Menit pertama: tahap Kenalan. Baca kata dan artinya, bunyikan kata utuhnya.";
+  if (lewat < 140) return "Tahap Ulangi: bunyikan per suku kata dan eja nama hurufnya, tirukan bersama.";
+  return "Tahap Ingat: arti disembunyikan. Ingat dulu dari bunyinya, baru tampilkan untuk memeriksa.";
+}
+$("btnTimer").onclick = () => {
+  jalan = !jalan;
+  $("btnTimer").textContent = jalan ? "Jeda" : "Lanjut";
+  if (jalan && !jam) {
+    jam = setInterval(() => {
+      if (!jalan) return;
+      if (sisa > 0) {
+        sisa--; tampilTimer(); $("saran").textContent = saranOtomatis();
+        const lewat = 180 - sisa;
+        if (lewat === 80 && tahap === "kenalan") aturTahap("ulangi");
+        if (lewat === 140 && tahap === "ulangi") aturTahap("ingat");
+      } else { jalan = false; $("btnTimer").textContent = "Mulai 3 Menit"; }
+    }, 1000);
+  }
+};
+$("btnTimerReset").onclick = () => { sisa = 180; jalan = false; $("btnTimer").textContent = "Mulai 3 Menit"; tampilTimer(); $("saran").textContent = "Tekan Mulai 3 Menit. Tahap berganti mengikuti waktu: Kenalan, Ulangi, Ingat, lalu Tes."; };
+
+fetch("manifest.json").then(r => r.json()).then(m => {
+  KATA = m.ar;
+  gambarKartu(); tampilTimer();
+  $("status").textContent = "Paket siap: 4 kosakata. Tekan Mulai 3 Menit atau jelajahi kartunya.";
+}).catch(e => { $("status").textContent = "Gagal memuat paket: " + e.message; });
+</script>
+</body>
+</html>
