@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Uji Suara Ketik Bebas — Piper di Browser</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 0; background: #0f2e30; color: #f3ead8; }
+  main { max-width: 640px; margin: 0 auto; padding: 20px 16px 40px; }
+  h1 { font-size: 22px; margin: 8px 0 4px; }
+  p.sub { color: #cfe0da; font-size: 14px; line-height: 1.5; }
+  p.sub a { color: #ffd98a; }
+  .kotak { background: #fff; color: #14343a; border-radius: 14px; padding: 16px; margin-top: 14px; }
+  label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 6px; }
+  input[type=text], select { width: 100%; box-sizing: border-box; padding: 11px; font-size: 17px; border: 2px solid #bcd2cb; border-radius: 10px; }
+  .baris { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  button { flex: 1 1 30%; padding: 13px 8px; font-size: 15px; font-weight: 700; border: 0; border-radius: 10px; background: #1F4A4E; color: #fff; cursor: pointer; }
+  button.sekunder { background: #e8f0ec; color: #1F4A4E; border: 2px solid #1F4A4E; }
+  button:disabled { opacity: .5; }
+  .siapkan { display: flex; gap: 8px; flex-wrap: wrap; }
+  .siapkan button { flex: 1 1 30%; }
+  .contoh { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .contoh button { flex: 0 1 auto; padding: 7px 12px; font-size: 14px; }
+  #status { font-size: 14px; margin-top: 12px; min-height: 20px; color: #1F4A4E; }
+  audio { width: 100%; margin-top: 10px; }
+  .potongan { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+  .potongan span { background: #fdf3e0; border: 1.5px solid #d9a441; color: #6b4e12; border-radius: 999px; padding: 5px 12px; font-size: 16px; }
+  .potongan span.aktif { background: #d9a441; color: #fff; }
+  .cek { display: flex; align-items: center; gap: 8px; font-size: 14px; margin-top: 12px; }
+  .cek input { width: 18px; height: 18px; }
+  .diag { font-size: 13px; color: #cfe0da; margin-top: 16px; line-height: 1.6; }
+</style>
+
+<script>
+/* Versi ini tidak lagi memakai service worker. Bila versi lama halaman ini
+   pernah mendaftarkan service worker di browser ini, cabut pendaftarannya
+   agar tidak ada sisa gerbang isolasi yang menghalangi. */
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister())).catch(() => {});
+}
+</script>
+<script type="importmap">
+{ "imports": {
+  "onnxruntime-web": "./bebas/ort/ort.wasm.min.mjs",
+  "@realtimex/piper-tts-web": "./bebas/lib/piper-tts-web.js"
+} }
+</script>
+</head>
+<body>
+<main>
+  <h1>Uji Suara Ketik Bebas</h1>
+  <p class="sub">Ketik kata apa pun, mesin suara Piper yang berjalan di dalam browser ini
+  yang membunyikannya. Bukan suara bawaan HP, bukan API luar. Model per bahasa ditanam
+  sekali dari halaman ini juga, sesudah itu bisa luring. Untuk kata contoh yang klipnya
+  sudah jadi, ada <a href="./index.html">halaman demo klip</a>.</p>
+
+  <div class="kotak">
+    <div class="siapkan" id="siapkan"></div>
+
+    <label for="bahasa">Bahasa</label>
+    <select id="bahasa">
+      <option value="ar">Arab</option>
+      <option value="id">Indonesia</option>
+      <option value="en">Inggris</option>
+    </select>
+    <div class="contoh" id="contoh"></div>
+
+    <label for="kata">Kata atau kalimat, bebas</label>
+    <input type="text" id="kata" value="كِتَابٌ" autocomplete="off">
+
+    <label for="pecahan">Pecahan suku kata (pisahkan dengan tanda -), boleh dikosongkan</label>
+    <input type="text" id="pecahan" value="كِ - تَا - بٌ" autocomplete="off">
+
+    <label class="cek"><input type="checkbox" id="lambat"> Putar lambat (untuk dieja dan ditirukan)</label>
+
+    <div class="baris">
+      <button id="btnKata">Bunyikan Kata</button>
+      <button id="btnSuku" class="sekunder">Per Suku Kata</button>
+      <button id="btnEja" class="sekunder">Eja Nama Huruf</button>
+    </div>
+    <div id="status">Memeriksa keadaan halaman...</div>
+    <div class="potongan" id="potongan"></div>
+    <audio id="pemain" controls></audio>
+  </div>
+
+  <p class="diag" id="diag"></p>
+</main>
+
+<script type="module">
+const $ = id => document.getElementById(id);
+const SUARA = {
+  ar: { voiceId: "ar_JO-kareem-low", file: "ar_JO-kareem-low.onnx", label: "Arab" },
+  id: { voiceId: "id_ID-news_tts-medium", file: "id_ID-news_tts-medium.onnx", label: "Indonesia" },
+  en: { voiceId: "en_US-amy-medium", file: "en_US-amy-medium.onnx", label: "Inggris" }
+};
+const CONTOH = {
+  ar: [["كِتَابٌ", "كِ - تَا - بٌ"], ["مَدْرَسَةٌ", "مَدْ - رَ - سَ - ةٌ"], ["هٰذَا كِتَابٌ جَدِيدٌ", ""]],
+  id: [["perpustakaan", "per-pus-ta-ka-an"], ["membaca", "mem-ba-ca"], ["sekolah", "se-ko-lah"]],
+  en: [["beautiful", "beau-ti-ful"], ["library", "li-bra-ry"], ["elephant", "e-le-phant"]]
+};
+const NAMA_AR = {"ا":"alif","ب":"ba","ت":"ta","ث":"tsa","ج":"jim","ح":"ha","خ":"kha","د":"dal","ذ":"dzal","ر":"ra","ز":"zai","س":"sin","ش":"syin","ص":"shad","ض":"dhad","ط":"tha","ظ":"zha","ع":"ain","غ":"ghain","ف":"fa","ق":"qaf","ك":"kaf","ل":"lam","م":"mim","ن":"nun","و":"wawu","ه":"ha","ي":"ya","ة":"ta marbuthah","أ":"alif hamzah","إ":"alif hamzah","آ":"alif maddah","ؤ":"hamzah di atas wawu","ئ":"hamzah di atas ya","ء":"hamzah","ـ":""};
+const NAMA_ID = {a:"a",b:"be",c:"ce",d:"de",e:"e",f:"ef",g:"ge",h:"ha",i:"i",j:"je",k:"ka",l:"el",m:"em",n:"en",o:"o",p:"pe",q:"qi",r:"er",s:"es",t:"te",u:"u",v:"ve",w:"we",x:"eks",y:"ye",z:"zet"};
+const NAMA_EN = {a:"ay",b:"bee",c:"cee",d:"dee",e:"ee",f:"ef",g:"gee",h:"aitch",i:"eye",j:"jay",k:"kay",l:"el",m:"em",n:"en",o:"oh",p:"pee",q:"cue",r:"ar",s:"ess",t:"tee",u:"you",v:"vee",w:"double-u",x:"ex",y:"wy",z:"zee"};
+
+let lib = null;
+const sesi = {};
+const siap = { ar: false, id: false, en: false };
+
+async function dirPiper() {
+  const root = await navigator.storage.getDirectory();
+  return root.getDirectoryHandle("piper", { create: true });
+}
+async function cekSiap() {
+  try {
+    const dir = await dirPiper();
+    for (const l of Object.keys(SUARA)) {
+      try { await dir.getFileHandle(SUARA[l].file); siap[l] = true; } catch { siap[l] = false; }
+    }
+  } catch {}
+  gambarSiapkan();
+}
+function gambarSiapkan() {
+  $("siapkan").innerHTML = "";
+  Object.keys(SUARA).forEach(l => {
+    const b = document.createElement("button");
+    b.className = "sekunder";
+    b.textContent = siap[l] ? "Model " + SUARA[l].label + " siap" : "Siapkan " + SUARA[l].label + " (±63 MB, sekali)";
+    b.disabled = siap[l];
+    b.onclick = () => siapkan(l);
+    $("siapkan").appendChild(b);
+  });
+}
+async function siapkan(lang) {
+  setSibuk(true);
+  try {
+    const dir = await dirPiper();
+    for (const nama of [SUARA[lang].file, SUARA[lang].file + ".json"]) {
+      $("status").textContent = "Menanam " + nama + " ke browser ini...";
+      const r = await fetch("./bebas/models/" + nama);
+      if (!r.ok) throw new Error("berkas model menjawab " + r.status);
+      const blob = await r.blob();
+      const fh = await dir.getFileHandle(nama, { create: true });
+      const w = await fh.createWritable();
+      await w.write(blob); await w.close();
+    }
+    await cekSiap();
+    $("status").textContent = "Model " + SUARA[lang].label + " siap. Bahasa itu sekarang bisa bunyi tanpa internet.";
+  } catch (e) {
+    $("status").textContent = "Gagal menyiapkan model " + SUARA[lang].label + ": " + e.message;
+  } finally { setSibuk(false); }
+}
+async function dapatSesi(lang) {
+  if (sesi[lang]) return sesi[lang];
+  const basis = new URL("./bebas/", location.href).href;
+  const s = await lib.TtsSession.create({
+    voiceId: SUARA[lang].voiceId,
+    wasmPaths: {
+      onnxWasm: basis + "ort/",
+      piperData: basis + "piper_phonemize.data",
+      piperWasm: basis + "piper_phonemize.wasm"
+    },
+    fallbackStrategy: "local",
+    logger: () => {}
+  });
+  sesi[lang] = s;
+  return s;
+}
+function setSibuk(v) { document.querySelectorAll("button").forEach(b => { if (!b.dataset.tetap) b.disabled = v; }); gambarSiapkan(); document.querySelectorAll("#siapkan button").forEach(b => { const l = b.textContent; }); }
+function tampilPotongan(list) {
+  $("potongan").innerHTML = "";
+  list.forEach(t => { const s = document.createElement("span"); s.textContent = t; $("potongan").appendChild(s); });
+}
+function sorot(i) { [...$("potongan").children].forEach((el, j) => el.classList.toggle("aktif", j === i)); }
+function putar(blob) {
+  return new Promise((resolve, reject) => {
+    const p = $("pemain");
+    const url = URL.createObjectURL(blob);
+    p.src = url; p.playbackRate = $("lambat").checked ? 0.78 : 1;
+    p.onended = () => { const d = p.duration || 0; URL.revokeObjectURL(url); resolve(d); };
+    p.onerror = () => { URL.revokeObjectURL(url); reject(new Error("audio gagal diputar")); };
+    p.play().catch(reject);
+  });
+}
+async function bunyikan(segmen, label) {
+  setSibuk(true);
+  tampilPotongan(segmen.map(s => s.tampil));
+  try {
+    for (const l of [...new Set(segmen.map(s => s.lang))]) {
+      if (!siap[l]) throw new Error("model " + SUARA[l].label + " belum disiapkan, tekan tombol Siapkan dulu");
+    }
+    let total = 0;
+    for (let i = 0; i < segmen.length; i++) {
+      sorot(i);
+      $("status").textContent = label + " — potongan " + (i + 1) + " dari " + segmen.length + ": " + segmen[i].tampil;
+      const s = await dapatSesi(segmen[i].lang);
+      const blob = await s.predict(segmen[i].teks);
+      total += await putar(blob);
+    }
+    sorot(-1);
+    $("status").textContent = label + " selesai. Total bunyi " + total.toFixed(2) + " detik, disintesis Piper di browser ini.";
+  } catch (e) {
+    sorot(-1);
+    $("status").textContent = "Gagal: " + (e && e.message ? e.message : String(e));
+  } finally { setSibuk(false); }
+}
+function pecahOtomatis(kata, b) {
+  if (b !== "id") return [kata];
+  const bersih = kata.toLowerCase().replace(/[^a-z]/g, "");
+  const vokal = "aiueo", diftong = ["ai", "au", "ei", "oi"];
+  const suku = []; let cur = "";
+  for (let i = 0; i < bersih.length; i++) {
+    cur += bersih[i];
+    const dua = bersih.substr(i, 2), berikut = bersih[i + 1] || "", sesudah = bersih[i + 2] || "";
+    if (diftong.includes(dua) && cur === dua) { suku.push(cur); cur = ""; i++; continue; }
+    if (vokal.includes(bersih[i]) && berikut && !vokal.includes(berikut) && sesudah && vokal.includes(sesudah)) { suku.push(cur); cur = ""; }
+  }
+  if (cur) suku.push(cur);
+  return suku.length ? suku : [kata];
+}
+function segarContoh() {
+  const b = $("bahasa").value;
+  $("kata").dir = b === "ar" ? "rtl" : "ltr";
+  $("pecahan").dir = b === "ar" ? "rtl" : "ltr";
+  $("contoh").innerHTML = "";
+  CONTOH[b].forEach(([k, p]) => {
+    const btn = document.createElement("button");
+    btn.className = "sekunder"; btn.textContent = k;
+    btn.onclick = () => { $("kata").value = k; $("pecahan").value = p; };
+    $("contoh").appendChild(btn);
+  });
+}
+$("bahasa").onchange = segarContoh;
+$("btnKata").onclick = () => {
+  const k = $("kata").value.trim(); if (!k) return;
+  bunyikan([{ teks: k, lang: $("bahasa").value, tampil: k }], "Kata utuh");
+};
+$("btnSuku").onclick = () => {
+  const k = $("kata").value.trim(); if (!k) return;
+  const b = $("bahasa").value;
+  const isian = $("pecahan").value.split("-").map(s => s.trim()).filter(Boolean);
+  const parts = isian.length > 1 ? isian : pecahOtomatis(k, b);
+  const semua = [k].concat(parts, [k]);
+  bunyikan(semua.map(t => ({ teks: t, lang: b, tampil: t })), "Per suku kata");
+};
+$("btnEja").onclick = () => {
+  const k = $("kata").value.trim(); if (!k) return;
+  const b = $("bahasa").value;
+  if (b === "ar") {
+    const bersih = k.replace(/[ً-ٰٟ]/g, "");
+    const huruf = [...bersih].filter(c => NAMA_AR[c]);
+    bunyikan([{ teks: k, lang: "ar", tampil: k }].concat(huruf.map(c => ({ teks: NAMA_AR[c], lang: "id", tampil: c + " = " + NAMA_AR[c] }))), "Eja nama huruf Arab");
+  } else {
+    const tab = b === "id" ? NAMA_ID : NAMA_EN;
+    const huruf = [...k.toLowerCase()].filter(c => tab[c]);
+    bunyikan([{ teks: k, lang: b, tampil: k }].concat(huruf.map(c => ({ teks: tab[c], lang: b, tampil: c + " = " + tab[c] }))), "Eja nama huruf");
+  }
+};
+
+(async () => {
+  $("diag").textContent = "Diagnosis: isolasi cross-origin " + (window.crossOriginIsolated ? "AKTIF" : "tidak aktif, mesin berjalan satu tali") +
+    ". Mesin: Piper WebAssembly dari berkas halaman ini sendiri.";
+  try {
+    lib = await import("@realtimex/piper-tts-web");
+    lib.PATH_MAP["id_ID-news_tts-medium"] = "id/id_ID/news_tts/medium/id_ID-news_tts-medium.onnx";
+    await cekSiap();
+    const belum = Object.keys(SUARA).filter(l => !siap[l]);
+    $("status").textContent = belum.length === 0
+      ? "Semua model sudah tertanam. Ketik kata apa pun lalu bunyikan."
+      : "Model belum tertanam: " + belum.map(l => SUARA[l].label).join(", ") + ". Tekan tombol Siapkan pada bahasanya.";
+  } catch (e) {
+    $("status").textContent = "Pustaka gagal dimuat: " + (e && e.message ? e.message : String(e));
+  }
+})();
+</script>
+</body>
+</html>

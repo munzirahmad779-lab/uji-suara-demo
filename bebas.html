@@ -30,20 +30,13 @@
   .cek input { width: 18px; height: 18px; }
   .diag { font-size: 13px; color: #cfe0da; margin-top: 16px; line-height: 1.6; }
 </style>
+
 <script>
-/* Isolasi cross-origin lewat service worker agar SharedArrayBuffer diizinkan
-   browser (dibutuhkan onnxruntime bertali banyak). Halaman dimuat ulang
-   sekali sesudah service worker aktif. */
-if (!window.crossOriginIsolated && "serviceWorker" in navigator) {
-  const n = Number(sessionStorage.getItem("coi-coba") || "0");
-  if (n < 3) {
-    sessionStorage.setItem("coi-coba", String(n + 1));
-    navigator.serviceWorker.register("./coi-serviceworker.js").then(() => {
-      if (navigator.serviceWorker.controller) location.reload();
-      navigator.serviceWorker.addEventListener("controllerchange", () => location.reload());
-      setTimeout(() => location.reload(), 3000);
-    }).catch(() => {});
-  }
+/* Versi ini tidak lagi memakai service worker. Bila versi lama halaman ini
+   pernah mendaftarkan service worker di browser ini, cabut pendaftarannya
+   agar tidak ada sisa gerbang isolasi yang menghalangi. */
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister())).catch(() => {});
 }
 </script>
 <script type="importmap">
@@ -264,12 +257,8 @@ $("btnEja").onclick = () => {
 };
 
 (async () => {
-  $("diag").textContent = "Diagnosis: isolasi cross-origin " + (window.crossOriginIsolated ? "AKTIF" : "belum aktif") +
+  $("diag").textContent = "Diagnosis: isolasi cross-origin " + (window.crossOriginIsolated ? "AKTIF" : "tidak aktif, mesin berjalan satu tali") +
     ". Mesin: Piper WebAssembly dari berkas halaman ini sendiri.";
-  if (!window.crossOriginIsolated) {
-    $("status").textContent = "Halaman sedang menyiapkan isolasi (memuat ulang sekali). Bila tidak bergerak, muat ulang manual.";
-    return;
-  }
   try {
     lib = await import("@realtimex/piper-tts-web");
     lib.PATH_MAP["id_ID-news_tts-medium"] = "id/id_ID/news_tts/medium/id_ID-news_tts-medium.onnx";
