@@ -5,35 +5,89 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kartu Hafalan — Set 4, Kumpulan Tumbuh, Acak Tanpa API</title>
 <style>
-  body { font-family: system-ui, sans-serif; margin: 0; background: #0f2e30; color: #f3ead8; }
+  :root {
+    --teal: #1F4A4E; --teal2: #255759; --teal3: #2F6D72;
+    --krem: #fdfaf2; --emas: #ffd98a; --emas-gelap: #caa53d;
+    --gelap: #14343a; --garis: #7fa8a0;
+  }
+  body { font-family: system-ui, sans-serif; margin: 0; color: #f3ead8;
+    background: linear-gradient(160deg, var(--teal), var(--teal2) 55%, var(--teal3)) fixed; }
   main { max-width: 680px; margin: 0 auto; padding: 20px 16px 44px; }
   h1 { font-size: 22px; margin: 8px 0 4px; }
-  p.sub { color: #cfe0da; font-size: 14px; line-height: 1.5; }
-  .kotak { background: #fff; color: #14343a; border-radius: 14px; padding: 16px; margin-top: 14px; }
-  textarea { width: 100%; box-sizing: border-box; min-height: 150px; padding: 10px; font-size: 15px; border: 2px solid #bcd2cb; border-radius: 10px; }
-  button.aksi { padding: 12px 16px; font-size: 15px; font-weight: 700; border: 0; border-radius: 10px; background: #1F4A4E; color: #fff; cursor: pointer; }
-  button.aksi.sekunder { background: #e8f0ec; color: #1F4A4E; border: 2px solid #1F4A4E; }
+  p.sub { color: #e7f0e9; font-size: 14px; line-height: 1.55; }
+  body.sesiAktif h1, body.sesiAktif p.sub { display: none; }
+  .kotak { background: var(--krem); color: var(--gelap); border-radius: 14px; padding: 16px; margin-top: 14px; }
+  textarea { width: 100%; box-sizing: border-box; min-height: 200px; padding: 10px; font-size: 16px; line-height: 1.7;
+    border: 2px solid var(--garis); border-radius: 10px; text-align: left;
+    font-family: "Amiri", "Traditional Arabic", "Scheherazade New", system-ui, serif; }
+  button.aksi { padding: 12px 16px; font-size: 15px; font-weight: 700; border: 0; border-radius: 10px; background: var(--teal); color: #fff; cursor: pointer; }
+  button.aksi.sekunder { background: #e8f0ec; color: var(--teal); border: 2px solid var(--teal); }
   .baris { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
-  #info { font-size: 15px; font-weight: 700; color: #1F4A4E; }
-  #timer { font-size: 26px; font-weight: 800; color: #1F4A4E; }
+  #info { font-size: 15px; font-weight: 700; color: var(--teal); }
+  #cipTahap { font-size: 11px; font-weight: 800; letter-spacing: 1px; background: var(--teal); color: var(--emas); border-radius: 999px; padding: 4px 10px; }
+  #timer { font-size: 26px; font-weight: 800; color: var(--teal); }
+  #keteranganTimer { font-size: 12px; color: #4a6a66; }
+  .batangLuar { height: 6px; background: #dcebe4; border-radius: 3px; margin-top: 6px; overflow: hidden; }
+  #batangWaktu { height: 100%; width: 100%; background: var(--emas-gelap); }
+  #statusSesi { font-size: 14px; margin-top: 12px; min-height: 20px; color: var(--teal); line-height: 1.45; }
   .kisi { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
-  .kartu { border: 2px solid #1F4A4E; border-radius: 12px; padding: 10px; text-align: center; background: #fdfaf2; }
-  .kartu .a { font-size: 30px; }
-  .kartu .b { font-size: 16px; color: #1F4A4E; font-weight: 700; margin-top: 4px; }
-  .kartu.tutup { background: #1F4A4E; color: #ffd98a; cursor: pointer; min-height: 96px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; }
-  .kartu.lulus { opacity: .5; }
-  .kartu.buka { border-color: #8a5a00; }
-  .kolom { padding: 8px 4px; }
-  .kolom + .kolom { border-top: 2px dashed #bcd2cb; }
-  .kolom .label { font-size: 11px; color: #6b4e12; text-transform: uppercase; letter-spacing: 1px; }
-  .kolom .isi { font-size: 24px; margin-top: 2px; }
-  .kolom .isi.arti { font-size: 19px; font-weight: 700; color: #1F4A4E; }
-  .kolom .tutupTeks { font-size: 22px; color: #8a5a00; cursor: pointer; letter-spacing: 3px; }
-  .miniBaris { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
-  button.mini { padding: 9px 14px; font-size: 14px; font-weight: 700; border-radius: 8px; border: 0; cursor: pointer; }
-  button.mini.benar { background: #1F4A4E; color: #fff; }
-  button.mini.salah { background: #e8f0ec; color: #1F4A4E; border: 2px solid #1F4A4E; }
-  #statusSesi { font-size: 14px; margin-top: 12px; min-height: 20px; color: #1F4A4E; }
+  .kartu { border: 2px solid var(--teal); border-radius: 12px; padding: 10px; text-align: center; background: var(--krem); position: relative; }
+  .kartu .a { font-size: 30px; font-family: "Amiri", "Traditional Arabic", "Scheherazade New", serif; line-height: 1.7; }
+  .kartu .b { font-size: 16px; color: var(--teal); font-weight: 700; margin-top: 4px; }
+  #kisiReview .kartu { height: 216px; display: flex; flex-direction: column; box-sizing: border-box; }
+  .kartu.tutup { background-color: var(--teal); color: var(--emas); cursor: pointer; align-items: center; justify-content: center;
+    background-image: radial-gradient(rgba(255,217,138,.16) 1.5px, transparent 1.7px); background-size: 16px 16px; }
+  .kartu.tutup .tanya { font-size: 46px; font-weight: 800; line-height: 1; }
+  .kartu.tutup .nama { font-size: 16px; font-weight: 800; margin-top: 6px; }
+  .kartu.tutup .mikro { font-size: 11px; color: #e7f0e9; margin-top: 6px; min-height: 14px; }
+  .kartu.tutup .titik { position: absolute; top: 8px; right: 8px; width: 13px; height: 13px; border-radius: 50%; background: var(--emas); border: 2px solid var(--teal); }
+  .kartu.buka { border-color: var(--emas-gelap); border-width: 3px; padding: 9px; }
+  .kartu.lulus { border-color: var(--emas-gelap); align-items: center; justify-content: center; }
+  .kartu.lulus .cip { margin-top: 8px; font-size: 12px; font-weight: 800; letter-spacing: 1px; background: var(--teal); color: var(--emas); border-radius: 999px; padding: 4px 12px; }
+  .kolom { padding: 6px 4px; }
+  .kolom + .kolom { border-top: 2px dashed var(--garis); }
+  .kolom .label { font-size: 11px; color: var(--teal); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+  .kolom .isi { font-size: 28px; margin-top: 2px; line-height: 1.6; font-family: "Amiri", "Traditional Arabic", "Scheherazade New", system-ui, serif; }
+  .kolom .isi.arti { font-size: 20px; font-weight: 700; color: var(--teal); font-family: system-ui, sans-serif; }
+  .kolom.tersembunyi { cursor: pointer; flex: 1; display: flex; flex-direction: column; }
+  .penutup { flex: 1; min-height: 52px; margin-top: 4px; border-radius: 8px; background: var(--teal); color: var(--emas);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    background-image: radial-gradient(rgba(255,217,138,.16) 1.5px, transparent 1.7px); background-size: 16px 16px; }
+  .penutup .tanyaKecil { font-size: 26px; font-weight: 800; line-height: 1; }
+  .penutup .mikro { font-size: 11px; color: #e7f0e9; }
+  .slotNilai { height: 48px; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: auto; }
+  .slotNilai .petunjukSlot { font-size: 12px; color: #4a6a66; }
+  button.mini { padding: 12px 16px; font-size: 14px; font-weight: 700; border-radius: 8px; border: 0; cursor: pointer; }
+  button.mini.benar { background: var(--teal); color: #fff; }
+  button.mini.salah { background: #e8f0ec; color: var(--teal); border: 2px solid var(--teal); }
+  #areaTuntas { text-align: center; padding: 18px 6px 8px; }
+  #areaTuntas .besar { font-size: 30px; font-weight: 800; color: var(--teal); }
+  #areaTuntas .ringkas { font-size: 15px; margin-top: 8px; line-height: 1.5; }
+  #kisiReview { transition: none; }
+  button:focus-visible, .kartu.tutup:focus-visible, .kolom.tersembunyi:focus-visible { outline: 3px solid var(--emas-gelap); outline-offset: 2px; }
+  @media (prefers-reduced-motion: no-preference) {
+    #kisiReview { transition: opacity .18s ease; }
+    .kartu.baruBuka { animation: masukKartu .18s ease-out; }
+    @keyframes masukKartu { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: scale(1); } }
+    .kartu.flashBenar { animation: kedipBenar .25s ease; }
+    @keyframes kedipBenar { 40% { box-shadow: 0 0 0 5px var(--emas); } }
+    .kartu.flashSalah { animation: kedipSalah .25s ease; }
+    @keyframes kedipSalah { 40% { box-shadow: 0 0 0 5px #c0563a; } }
+    button.aksi:active, button.mini:active, .kartu.tutup:active, .kolom.tersembunyi:active { transform: scale(.97); }
+    button.aksi, button.mini, .kartu.tutup, .kolom.tersembunyi { transition: transform .09s ease; }
+    #batangWaktu { transition: width 1s linear; }
+  }
+  @media (min-width: 640px) {
+    #kisiReview { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 1000px) {
+    main { max-width: 1120px; }
+    #kisiBelajar { grid-template-columns: repeat(4, 1fr); }
+    #kisiReview { grid-template-columns: repeat(4, 1fr); }
+    .kartu .a { font-size: 34px; }
+    .kolom .isi { font-size: 30px; }
+    #kisiReview .kartu { height: 228px; }
+  }
 </style>
 </head>
 <body>
@@ -43,12 +97,13 @@
   jumlahnya. Sistem membaginya sendiri menjadi set 4 kartu. Tiap set dihafalkan dulu, lalu
   diuji dalam kumpulan yang tumbuh: 4, lalu 8, lalu 12, dan seterusnya. Pada tahap uji, tiap
   kartu punya dua kolom, kosakata dan terjemahannya. Satu kolom tampil dan satu tertutup,
-  dan mana yang tertutup diacak ulang setiap kartu dibuka. Semua acakan berjalan di perangkat
-  ini dengan acak bawaan browser, tanpa API dan tanpa internet.</p>
+  dan mana yang tertutup diacak ulang setiap kartu dibuka. Kartu lulus sesudah dua kali benar
+  dalam campuran; sekali salah, hitungan benarnya kembali ke nol. Semua acakan berjalan di
+  perangkat ini dengan acak bawaan browser, tanpa API dan tanpa internet.</p>
 
   <div class="kotak" id="kotakIsi">
     <label for="daftar" style="font-size:13px;font-weight:600">Daftar kartu, format: tulisan = arti</label>
-    <textarea id="daftar" dir="auto">كِتَابٌ = buku
+    <textarea id="daftar" dir="ltr">كِتَابٌ = buku
 بَيْتٌ = rumah
 مَدْرَسَةٌ = sekolah
 قَلَمٌ = pena
@@ -69,8 +124,14 @@
   <div class="kotak" id="kotakSesi" style="display:none">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
       <div id="info"></div>
-      <div id="timer"></div>
+      <span id="cipTahap"></span>
+      <div style="text-align:right">
+        <div id="timer"></div>
+        <div id="keteranganTimer"></div>
+      </div>
     </div>
+    <div class="batangLuar" id="batangLuar" style="display:none"><div id="batangWaktu"></div></div>
+    <div id="statusSesi"></div>
 
     <div id="areaBelajar">
       <div class="kisi" id="kisiBelajar"></div>
@@ -83,7 +144,14 @@
       <div class="kisi" id="kisiReview"></div>
     </div>
 
-    <div id="statusSesi"></div>
+    <div id="areaTuntas" style="display:none">
+      <div class="besar">Sesi Tuntas</div>
+      <div class="ringkas" id="ringkasTuntas"></div>
+      <div class="baris" style="justify-content:center">
+        <button class="aksi" id="btnMainLagi">Main Lagi dengan Daftar Ini</button>
+      </div>
+    </div>
+
     <div class="baris">
       <button class="aksi sekunder" id="btnUlang">Akhiri dan Ubah Daftar</button>
     </div>
@@ -94,35 +162,42 @@
 const $ = id => document.getElementById(id);
 const arab = t => /[\u0600-\u06FF]/.test(t);
 const acak = n => Math.floor(Math.random() * n);
+const gerakDikurangi = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const jeda = ms => new Promise(r => setTimeout(r, gerakDikurangi() ? 0 : ms));
 function kocok(arr) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = acak(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 
-let kartu = [];        // {a, b, benar, lulus}
+let kartu = [];        // {a, b, benar, salah, lulus}
 let setKe = 0;
 const setUkuran = 4;
-let urutan = [];       // urutan tampil kartu kumpulan di papan uji
-let bukaIdx = -1;      // kartu yang sedang dibuka
-let sisiTampil = "a";  // kolom yang tampil pada kartu terbuka
-let terjawab = false;  // kolom tertutup sudah dibuka untuk memeriksa
+let urutan = [];
+let bukaIdx = -1;
+let sisiTampil = "a";
+let terjawab = false;
+let baruBuka = false;  // animasi masuk hanya pada render sesudah membuka
+let sibuk = false;     // kunci masukan selama pengakuan penilaian
+let tonggak = { setengah: false, sisaDua: false };
 let sisaBelajar = 180, jamBelajar = null;
 
 function kumpulanSampaiSet() { return kartu.slice(0, Math.min(kartu.length, (setKe + 1) * setUkuran)); }
+function totalSet() { return Math.ceil(kartu.length / setUkuran); }
 function infoTeks() {
   const k = kumpulanSampaiSet();
   const lulus = k.filter(c => c.lulus).length;
-  return "Set " + (setKe + 1) + " dari " + Math.ceil(kartu.length / setUkuran) +
-    " · Kumpulan " + k.length + " kartu · Lulus " + lulus + " dari " + k.length;
+  return "Set " + (setKe + 1) + "/" + totalSet() + " · Kumpulan " + k.length + " · Lulus " + lulus + "/" + k.length;
 }
 
 function mulaiSesi() {
   const baris = $("daftar").value.split("\n").map(s => s.trim()).filter(Boolean);
   kartu = baris.map(b => {
     const p = b.split("=");
-    return { a: (p[0] || "").trim(), b: (p.slice(1).join("=") || "").trim(), benar: 0, lulus: false };
+    return { a: (p[0] || "").trim(), b: (p.slice(1).join("=") || "").trim(), benar: 0, salah: 0, lulus: false };
   }).filter(c => c.a && c.b);
   if (kartu.length < 2) { $("statusIsi").textContent = "Isi dulu minimal 2 kartu dengan format tulisan = arti."; return; }
   setKe = 0;
+  document.body.classList.add("sesiAktif");
   $("kotakIsi").style.display = "none";
   $("kotakSesi").style.display = "";
+  $("areaTuntas").style.display = "none";
   mulaiBelajar();
 }
 
@@ -130,42 +205,34 @@ function mulaiBelajar() {
   clearInterval(jamBelajar);
   $("areaBelajar").style.display = "";
   $("areaReview").style.display = "none";
+  $("areaTuntas").style.display = "none";
+  $("cipTahap").textContent = "TAHAP HAFAL";
   $("info").textContent = infoTeks();
   const setIni = kartu.slice(setKe * setUkuran, Math.min(kartu.length, (setKe + 1) * setUkuran));
   $("kisiBelajar").innerHTML = "";
   setIni.forEach(c => {
     const d = document.createElement("div");
     d.className = "kartu";
-    const a = document.createElement("div"); a.className = "a"; a.textContent = c.a; if (arab(c.a)) a.dir = "rtl";
-    const b = document.createElement("div"); b.className = "b"; b.textContent = c.b;
-    d.appendChild(a); d.appendChild(b);
+    d.appendChild(kolomBelajar(c, "a"));
+    d.appendChild(kolomBelajar(c, "b"));
     $("kisiBelajar").appendChild(d);
   });
   sisaBelajar = 180;
   $("timer").textContent = "03:00";
+  $("keteranganTimer").textContent = "waktu habis, ujian mulai sendiri";
+  $("batangLuar").style.display = "";
+  $("batangWaktu").style.width = "100%";
   $("statusSesi").textContent = "Tahap hafal: perhatikan " + setIni.length + " kartu ini. Sesudah siap, tutup dengan tombol Uji Sekarang.";
   jamBelajar = setInterval(() => {
     if (sisaBelajar > 0) {
       sisaBelajar--;
       $("timer").textContent = String(Math.floor(sisaBelajar / 60)).padStart(2, "0") + ":" + String(sisaBelajar % 60).padStart(2, "0");
+      $("batangWaktu").style.width = (sisaBelajar / 180 * 100) + "%";
     } else { clearInterval(jamBelajar); mulaiReview(); }
   }, 1000);
 }
 
-function mulaiReview() {
-  clearInterval(jamBelajar);
-  $("timer").textContent = "";
-  $("areaBelajar").style.display = "none";
-  $("areaReview").style.display = "";
-  const k = kumpulanSampaiSet();
-  urutan = kocok(k.map((_, i) => i));
-  bukaIdx = -1; terjawab = false;
-  $("info").textContent = infoTeks();
-  $("statusSesi").textContent = "Tahap uji: ketuk satu kartu. Di dalam kartunya, satu kolom tampil dan satu tertutup, diacak setiap dibuka. Jawab yang tertutup dari ingatan, ketuk kolom tertutupnya untuk memeriksa, lalu nilai sendiri.";
-  gambarReview();
-}
-
-function kolomKartu(c, sisi, tampil, bisaKetuk) {
+function kolomBelajar(c, sisi) {
   const d = document.createElement("div");
   d.className = "kolom";
   const label = document.createElement("div");
@@ -173,16 +240,54 @@ function kolomKartu(c, sisi, tampil, bisaKetuk) {
   label.textContent = sisi === "a" ? "Kosakata" : "Terjemahan";
   d.appendChild(label);
   const isi = document.createElement("div");
+  if (sisi === "a") { isi.className = "isi"; isi.textContent = c.a; if (arab(c.a)) isi.dir = "rtl"; }
+  else { isi.className = "isi arti"; isi.textContent = c.b; }
+  d.appendChild(isi);
+  return d;
+}
+
+function mulaiReview() {
+  clearInterval(jamBelajar);
+  $("timer").textContent = "";
+  $("keteranganTimer").textContent = "";
+  $("batangLuar").style.display = "none";
+  $("areaBelajar").style.display = "none";
+  $("areaTuntas").style.display = "none";
+  $("areaReview").style.display = "";
+  $("cipTahap").textContent = "TAHAP UJI";
+  const k = kumpulanSampaiSet();
+  urutan = kocok(k.map((_, i) => i));
+  bukaIdx = -1; terjawab = false; sibuk = false;
+  tonggak = { setengah: false, sisaDua: false };
+  $("info").textContent = infoTeks();
+  $("statusSesi").textContent = "Tahap uji: ketuk satu kartu. Satu kolom tampil, satu tertutup, diacak setiap dibuka. Jawab yang tertutup dari ingatan, ketuk kolom tertutupnya untuk memeriksa, lalu nilai sendiri. Kartu lulus sesudah dua kali benar; sekali salah, hitungan benarnya kembali ke nol.";
+  gambarReview();
+}
+
+function kolomKartu(c, sisi) {
+  const d = document.createElement("div");
+  d.className = "kolom";
+  const label = document.createElement("div");
+  label.className = "label";
+  label.textContent = sisi === "a" ? "Kosakata" : "Terjemahan";
+  d.appendChild(label);
+  const tampil = (sisi === sisiTampil) || terjawab;
   if (tampil) {
+    const isi = document.createElement("div");
     isi.className = "isi" + (sisi === "b" ? " arti" : "");
     isi.textContent = sisi === "a" ? c.a : c.b;
     if (arab(isi.textContent)) isi.dir = "rtl";
+    d.appendChild(isi);
   } else {
-    isi.className = "tutupTeks";
-    isi.textContent = "▓▓▓▓▓";
-    if (bisaKetuk) isi.onclick = ev => { ev.stopPropagation(); periksa(); };
+    d.classList.add("tersembunyi");
+    const p = document.createElement("div");
+    p.className = "penutup";
+    const t = document.createElement("div"); t.className = "tanyaKecil"; t.textContent = "?";
+    const m = document.createElement("div"); m.className = "mikro"; m.textContent = "ketuk untuk periksa";
+    p.appendChild(t); p.appendChild(m);
+    d.appendChild(p);
+    d.onclick = () => periksa();
   }
-  d.appendChild(isi);
   return d;
 }
 
@@ -194,74 +299,121 @@ function gambarReview() {
     const d = document.createElement("div");
     if (c.lulus) {
       d.className = "kartu lulus";
-      const a = document.createElement("div"); a.className = "a"; a.style.fontSize = "22px"; a.textContent = c.a; if (arab(c.a)) a.dir = "rtl";
+      const a = document.createElement("div"); a.className = "a"; a.style.fontSize = "24px"; a.textContent = c.a; if (arab(c.a)) a.dir = "rtl";
       const b = document.createElement("div"); b.className = "b"; b.textContent = c.b;
-      const l = document.createElement("div"); l.style.cssText = "font-size:12px;font-weight:800;color:#1F4A4E;margin-top:4px"; l.textContent = "LULUS";
-      d.appendChild(a); d.appendChild(b); d.appendChild(l);
+      const cip = document.createElement("div"); cip.className = "cip"; cip.textContent = "✓ LULUS";
+      d.appendChild(a); d.appendChild(b); d.appendChild(cip);
     } else if (i === bukaIdx) {
-      d.className = "kartu buka";
-      d.appendChild(kolomKartu(c, "a", sisiTampil === "a" || terjawab, sisiTampil === "b"));
-      d.appendChild(kolomKartu(c, "b", sisiTampil === "b" || terjawab, sisiTampil === "a"));
+      d.className = "kartu buka" + (baruBuka ? " baruBuka" : "");
+      d.id = "kartuTerbuka";
+      d.appendChild(kolomKartu(c, "a"));
+      d.appendChild(kolomKartu(c, "b"));
+      const slot = document.createElement("div");
+      slot.className = "slotNilai";
       if (terjawab) {
-        const bar = document.createElement("div");
-        bar.className = "miniBaris";
         const bb = document.createElement("button"); bb.className = "mini benar"; bb.textContent = "Saya Benar"; bb.onclick = () => nilai(true);
         const bs = document.createElement("button"); bs.className = "mini salah"; bs.textContent = "Masih Salah"; bs.onclick = () => nilai(false);
-        bar.appendChild(bb); bar.appendChild(bs);
-        d.appendChild(bar);
+        slot.appendChild(bb); slot.appendChild(bs);
+      } else {
+        const p = document.createElement("span"); p.className = "petunjukSlot"; p.textContent = "jawab dulu dari ingatan, lalu ketuk kolom tertutup";
+        slot.appendChild(p);
       }
+      d.appendChild(slot);
     } else {
       d.className = "kartu tutup";
-      d.textContent = "Kartu ?";
+      if (c.benar > 0) { const t = document.createElement("span"); t.className = "titik"; d.appendChild(t); }
+      const t = document.createElement("div"); t.className = "tanya"; t.textContent = "?";
+      const n = document.createElement("div"); n.className = "nama"; n.textContent = "Kartu";
+      const m = document.createElement("div"); m.className = "mikro";
+      const jejak = [];
+      if (c.benar > 0) jejak.push("sudah benar " + c.benar + "x");
+      if (c.salah > 0) jejak.push("salah " + c.salah + "x");
+      m.textContent = jejak.join(" · ");
+      d.appendChild(t); d.appendChild(n); d.appendChild(m);
       d.onclick = () => bukaKartu(i);
     }
     kisi.appendChild(d);
   });
+  baruBuka = false;
 }
 
 function bukaKartu(i) {
-  bukaIdx = i; terjawab = false;
+  if (sibuk) return;
+  bukaIdx = i; terjawab = false; baruBuka = true;
   sisiTampil = Math.random() < 0.5 ? "a" : "b";
   $("statusSesi").textContent = "Kartu dibuka: kolom " + (sisiTampil === "a" ? "kosakata" : "terjemahan") + " yang tampil. Jawab kolom tertutupnya dari ingatan.";
   gambarReview();
 }
 
 function periksa() {
-  if (bukaIdx < 0) return;
+  if (bukaIdx < 0 || sibuk) return;
   terjawab = true;
   $("statusSesi").textContent = "Bandingkan dengan jawabanmu, lalu nilai sendiri.";
   gambarReview();
 }
 
-function nilai(benar) {
-  if (bukaIdx < 0 || !terjawab) return;
+async function nilai(benar) {
+  if (bukaIdx < 0 || !terjawab || sibuk) return;
+  sibuk = true;
   const c = kartu[bukaIdx];
+  const el = $("kartuTerbuka");
+  if (el) el.classList.add(benar ? "flashBenar" : "flashSalah");
+  let pesan;
   if (benar) {
     c.benar++;
-    if (c.benar >= 2) { c.lulus = true; $("statusSesi").textContent = "Kartu itu lulus dari kumpulan."; }
-    else $("statusSesi").textContent = "Benar. Kartu itu akan muncul sekali lagi nanti untuk mengunci.";
+    if (c.benar >= 2) { c.lulus = true; pesan = "Benar lagi. Kartu itu lulus dari kumpulan."; }
+    else pesan = "Benar. Kartu itu ditandai satu titik; sekali benar lagi dalam campuran, ia lulus.";
   } else {
-    c.benar = 0;
-    $("statusSesi").textContent = "Masih salah. Kartu itu tetap di kumpulan dan akan muncul lagi.";
+    c.benar = 0; c.salah++;
+    pesan = "Masih salah. Hitungan benar kartu ini kembali ke nol; ia tetap di kumpulan dan akan muncul lagi.";
   }
+  const k = kumpulanSampaiSet();
+  const jmlLulus = k.filter(x => x.lulus).length;
+  if (!tonggak.setengah && jmlLulus * 2 >= k.length && jmlLulus < k.length) { tonggak.setengah = true; pesan += " Separuh kumpulan sudah lulus."; }
+  if (!tonggak.sisaDua && k.length - jmlLulus === 2) { tonggak.sisaDua = true; pesan += " Tinggal dua kartu lagi."; }
+  $("statusSesi").textContent = pesan;
+  await jeda(250);
   bukaIdx = -1; terjawab = false;
+  if (k.every(x => x.lulus)) {
+    gambarReview();
+    $("info").textContent = infoTeks();
+    if ((setKe + 1) * setUkuran >= kartu.length) {
+      $("areaReview").style.display = "none";
+      $("cipTahap").textContent = "SELESAI";
+      $("ringkasTuntas").textContent = "Seluruh " + kartu.length + " kartu lulus uji campuran dalam " + totalSet() + " set. Besok, kumpulan ini yang dibuka lebih dulu sebelum kartu baru.";
+      $("areaTuntas").style.display = "";
+      $("statusSesi").textContent = "Sesi tuntas. Kerja bagus.";
+      sibuk = false;
+    } else {
+      $("statusSesi").textContent = "Kumpulan " + k.length + " kartu tuntas semua. Lanjut ke set berikutnya; kumpulan akan tumbuh.";
+      await jeda(700);
+      setKe++;
+      sibuk = false;
+      mulaiBelajar();
+    }
+    return;
+  }
+  const kisi = $("kisiReview");
+  if (!gerakDikurangi()) kisi.style.opacity = "0";
+  await jeda(120);
   urutan = kocok(urutan);
   $("info").textContent = infoTeks();
   gambarReview();
-  const k = kumpulanSampaiSet();
-  if (k.every(x => x.lulus)) {
-    if ((setKe + 1) * setUkuran >= kartu.length) {
-      $("statusSesi").textContent = "Selesai. Seluruh " + kartu.length + " kartu lulus uji campuran. Besok, kumpulan ini yang dibuka lebih dulu sebelum kartu baru.";
-    } else {
-      setKe++;
-      mulaiBelajar();
-    }
-  }
+  kisi.style.opacity = "1";
+  sibuk = false;
 }
 
 $("btnMulai").onclick = mulaiSesi;
 $("btnLanjutReview").onclick = mulaiReview;
-$("btnUlang").onclick = () => { clearInterval(jamBelajar); $("kotakSesi").style.display = "none"; $("kotakIsi").style.display = ""; };
+$("btnMainLagi").onclick = mulaiSesi;
+$("btnUlang").onclick = () => {
+  const sesiJalan = $("kotakSesi").style.display !== "none" && $("areaTuntas").style.display === "none";
+  if (sesiJalan && !window.confirm("Akhiri sesi sekarang? Kemajuan sesi ini akan hilang.")) return;
+  clearInterval(jamBelajar);
+  document.body.classList.remove("sesiAktif");
+  $("kotakSesi").style.display = "none";
+  $("kotakIsi").style.display = "";
+};
 </script>
 </body>
 </html>
