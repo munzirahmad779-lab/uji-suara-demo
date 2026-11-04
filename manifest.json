@@ -1,0 +1,317 @@
+{
+ "ar": [
+  {
+   "id": "w1",
+   "kata": "كِتَابٌ",
+   "pecahan": [
+    "كِ",
+    "تَا",
+    "بٌ"
+   ],
+   "modes": {
+    "kata": [
+     "clips/ar/w1/kata-0.mp3"
+    ],
+    "suku": [
+     "clips/ar/w1/suku-0.mp3",
+     "clips/ar/w1/suku-1.mp3",
+     "clips/ar/w1/suku-2.mp3",
+     "clips/ar/w1/suku-3.mp3",
+     "clips/ar/w1/suku-4.mp3"
+    ],
+    "eja": [
+     "clips/ar/w1/eja-0.mp3",
+     "clips/ar/w1/eja-1.mp3",
+     "clips/ar/w1/eja-2.mp3",
+     "clips/ar/w1/eja-3.mp3",
+     "clips/ar/w1/eja-4.mp3"
+    ]
+   }
+  },
+  {
+   "id": "w2",
+   "kata": "بَيْتٌ",
+   "pecahan": [
+    "بَيْ",
+    "تٌ"
+   ],
+   "modes": {
+    "kata": [
+     "clips/ar/w2/kata-0.mp3"
+    ],
+    "suku": [
+     "clips/ar/w2/suku-0.mp3",
+     "clips/ar/w2/suku-1.mp3",
+     "clips/ar/w2/suku-2.mp3",
+     "clips/ar/w2/suku-3.mp3"
+    ],
+    "eja": [
+     "clips/ar/w2/eja-0.mp3",
+     "clips/ar/w2/eja-1.mp3",
+     "clips/ar/w2/eja-2.mp3",
+     "clips/ar/w2/eja-3.mp3"
+    ]
+   }
+  },
+  {
+   "id": "w3",
+   "kata": "مَدْرَسَةٌ",
+   "pecahan": [
+    "مَدْ",
+    "رَ",
+    "سَ",
+    "ةٌ"
+   ],
+   "modes": {
+    "kata": [
+     "clips/ar/w3/kata-0.mp3"
+    ],
+    "suku": [
+     "clips/ar/w3/suku-0.mp3",
+     "clips/ar/w3/suku-1.mp3",
+     "clips/ar/w3/suku-2.mp3",
+     "clips/ar/w3/suku-3.mp3",
+     "clips/ar/w3/suku-4.mp3",
+     "clips/ar/w3/suku-5.mp3"
+    ],
+    "eja": [
+     "clips/ar/w3/eja-0.mp3",
+     "clips/ar/w3/eja-1.mp3",
+     "clips/ar/w3/eja-2.mp3",
+     "clips/ar/w3/eja-3.mp3",
+     "clips/ar/w3/eja-4.mp3",
+     "clips/ar/w3/eja-5.mp3"
+    ]
+   }
+  },
+  {
+   "id": "w4",
+   "kata": "قَلَمٌ",
+   "pecahan": [
+    "قَ",
+    "لَ",
+    "مٌ"
+   ],
+   "modes": {
+    "kata": [
+     "clips/ar/w4/kata-0.mp3"
+    ],
+    "suku": [
+     "clips/ar/w4/suku-0.mp3",
+     "clips/ar/w4/suku-1.mp3",
+     "clips/ar/w4/suku-2.mp3",
+     "clips/ar/w4/suku-3.mp3",
+     "clips/ar/w4/suku-4.mp3"
+    ],
+    "eja": [
+     "clips/ar/w4/eja-0.mp3",
+     "clips/ar/w4/eja-1.mp3",
+     "clips/ar/w4/eja-2.mp3",
+     "clips/ar/w4/eja-3.mp3"
+    ]
+   }
+  }
+ ],
+ "id": [
+  {
+   "id": "w5",
+   "kata": "perpustakaan",
+   "pecahan": [
+    "per",
+    "pus",
+    "ta",
+    "ka",
+    "an"
+   ],
+   "modes": {
+    "kata": [
+     "clips/id/w5/kata-0.mp3"
+    ],
+    "suku": [
+     "clips/id/w5/suku-0.mp3",
+     "clips/id/w5/suku-1.mp3",
+     "clips/id/w5/suku-2.mp3",
+     "clips/id/w5/suku-3.mp3",
+     "clips/id/w5/suku-4.mp3",
+     "clips/id/w5/suku-5.mp3",
+     "clips/id/w5/suku-6.mp3"
+    ],
+    "eja": [
+     "clips/id/w5/eja-0.mp3",
+     "clips/id/w5/eja-1.mp3",
+     "clips/id/w5/eja-2.mp3",
+     "clips/id/w5/eja-3.mp3",
+     "clips/id/w5/eja-4.mp3",
+     "clips/id/w5/eja-5.mp3",
+     "clips/id/w5/eja-6.mp3",
+     "clips/id/w5/eja-7.mp3",
+     "clips/id/w5/eja-8.mp3",
+     "clips/id/w5/eja-9.mp3",
+     "clips/id/w5/eja-10.mp3",
+     "clips/id/w5/eja-11.mp3",
+     "clips/id/w5/eja-12.mp3"
+    ]
+   }
+  },
+  {
+   "id": "w6",
+   "kata": "membaca",
+   "pecahan": [
+    "mem",
+    "ba",
+    "ca"
+   ],
+   "modes": {
+    "kata": [
+     "clips/id/w6/kata-0.mp3"
+    ],
+    "suku": [
+     "clips/id/w6/suku-0.mp3",
+     "clips/id/w6/suku-1.mp3",
+     "clips/id/w6/suku-2.mp3",
+     "clips/id/w6/suku-3.mp3",
+     "clips/id/w6/suku-4.mp3"
+    ],
+    "eja": [
+     "clips/id/w6/eja-0.mp3",
+     "clips/id/w6/eja-1.mp3",
+     "clips/id/w6/eja-2.mp3",
+     "clips/id/w6/eja-3.mp3",
+     "clips/id/w6/eja-4.mp3",
+     "clips/id/w6/eja-5.mp3",
+     "clips/id/w6/eja-6.mp3",
+     "clips/id/w6/eja-7.mp3"
+    ]
+   }
+  },
+  {
+   "id": "w7",
+   "kata": "sekolah",
+   "pecahan": [
+    "se",
+    "ko",
+    "lah"
+   ],
+   "modes": {
+    "kata": [
+     "clips/id/w7/kata-0.mp3"
+    ],
+    "suku": [
+     "clips/id/w7/suku-0.mp3",
+     "clips/id/w7/suku-1.mp3",
+     "clips/id/w7/suku-2.mp3",
+     "clips/id/w7/suku-3.mp3",
+     "clips/id/w7/suku-4.mp3"
+    ],
+    "eja": [
+     "clips/id/w7/eja-0.mp3",
+     "clips/id/w7/eja-1.mp3",
+     "clips/id/w7/eja-2.mp3",
+     "clips/id/w7/eja-3.mp3",
+     "clips/id/w7/eja-4.mp3",
+     "clips/id/w7/eja-5.mp3",
+     "clips/id/w7/eja-6.mp3",
+     "clips/id/w7/eja-7.mp3"
+    ]
+   }
+  }
+ ],
+ "en": [
+  {
+   "id": "w8",
+   "kata": "beautiful",
+   "pecahan": [
+    "beau",
+    "ti",
+    "ful"
+   ],
+   "modes": {
+    "kata": [
+     "clips/en/w8/kata-0.mp3"
+    ],
+    "suku": [
+     "clips/en/w8/suku-0.mp3",
+     "clips/en/w8/suku-1.mp3",
+     "clips/en/w8/suku-2.mp3",
+     "clips/en/w8/suku-3.mp3",
+     "clips/en/w8/suku-4.mp3"
+    ],
+    "eja": [
+     "clips/en/w8/eja-0.mp3",
+     "clips/en/w8/eja-1.mp3",
+     "clips/en/w8/eja-2.mp3",
+     "clips/en/w8/eja-3.mp3",
+     "clips/en/w8/eja-4.mp3",
+     "clips/en/w8/eja-5.mp3",
+     "clips/en/w8/eja-6.mp3",
+     "clips/en/w8/eja-7.mp3",
+     "clips/en/w8/eja-8.mp3",
+     "clips/en/w8/eja-9.mp3"
+    ]
+   }
+  },
+  {
+   "id": "w9",
+   "kata": "library",
+   "pecahan": [
+    "li",
+    "bra",
+    "ry"
+   ],
+   "modes": {
+    "kata": [
+     "clips/en/w9/kata-0.mp3"
+    ],
+    "suku": [
+     "clips/en/w9/suku-0.mp3",
+     "clips/en/w9/suku-1.mp3",
+     "clips/en/w9/suku-2.mp3",
+     "clips/en/w9/suku-3.mp3",
+     "clips/en/w9/suku-4.mp3"
+    ],
+    "eja": [
+     "clips/en/w9/eja-0.mp3",
+     "clips/en/w9/eja-1.mp3",
+     "clips/en/w9/eja-2.mp3",
+     "clips/en/w9/eja-3.mp3",
+     "clips/en/w9/eja-4.mp3",
+     "clips/en/w9/eja-5.mp3",
+     "clips/en/w9/eja-6.mp3",
+     "clips/en/w9/eja-7.mp3"
+    ]
+   }
+  },
+  {
+   "id": "w10",
+   "kata": "elephant",
+   "pecahan": [
+    "e",
+    "le",
+    "phant"
+   ],
+   "modes": {
+    "kata": [
+     "clips/en/w10/kata-0.mp3"
+    ],
+    "suku": [
+     "clips/en/w10/suku-0.mp3",
+     "clips/en/w10/suku-1.mp3",
+     "clips/en/w10/suku-2.mp3",
+     "clips/en/w10/suku-3.mp3",
+     "clips/en/w10/suku-4.mp3"
+    ],
+    "eja": [
+     "clips/en/w10/eja-0.mp3",
+     "clips/en/w10/eja-1.mp3",
+     "clips/en/w10/eja-2.mp3",
+     "clips/en/w10/eja-3.mp3",
+     "clips/en/w10/eja-4.mp3",
+     "clips/en/w10/eja-5.mp3",
+     "clips/en/w10/eja-6.mp3",
+     "clips/en/w10/eja-7.mp3",
+     "clips/en/w10/eja-8.mp3"
+    ]
+   }
+  }
+ ]
+}

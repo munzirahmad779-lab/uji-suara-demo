@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo Uji Suara — Piper</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 0; background: #0f2e30; color: #f3ead8; }
+  main { max-width: 640px; margin: 0 auto; padding: 20px 16px 40px; }
+  h1 { font-size: 22px; margin: 8px 0 4px; }
+  p.sub { color: #cfe0da; font-size: 14px; line-height: 1.5; }
+  .kotak { background: #fff; color: #14343a; border-radius: 14px; padding: 16px; margin-top: 14px; }
+  .tabs, .kata-baris, .mode-baris { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tabs button, .kata-baris button, .mode-baris button {
+    padding: 10px 14px; font-size: 15px; font-weight: 700; border-radius: 10px;
+    border: 2px solid #1F4A4E; background: #e8f0ec; color: #1F4A4E; cursor: pointer;
+  }
+  .tabs button.aktif, .kata-baris button.aktif { background: #1F4A4E; color: #fff; }
+  .mode-baris button { flex: 1 1 30%; background: #1F4A4E; color: #fff; border: 0; padding: 13px 8px; }
+  .mode-baris button:disabled { opacity: .5; }
+  .kata-baris { margin-top: 12px; }
+  .kata-baris button { font-size: 17px; }
+  .mode-baris { margin-top: 14px; }
+  #status { font-size: 14px; margin-top: 12px; min-height: 20px; color: #1F4A4E; }
+  .pecahan { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .pecahan span { background: #fdf3e0; border: 1.5px solid #d9a441; color: #6b4e12; border-radius: 999px; padding: 5px 12px; font-size: 16px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Demo Uji Suara</h1>
+  <p class="sub">Bunyi pada halaman ini adalah hasil render mesin suara Piper yang sama
+  dengan yang berjalan di server lokal Muse. Klipnya sudah jadi berkas suara, jadi halaman
+  ini bisa langsung dimainkan di HP mana pun. Ketik kata bebas belum ada di demo ini;
+  itu nanti di web Magguru.</p>
+
+  <div class="kotak">
+    <div class="tabs" id="tabs"></div>
+    <div class="kata-baris" id="kataBaris"></div>
+    <div class="pecahan" id="pecahan"></div>
+    <div class="mode-baris">
+      <button data-mode="kata">Bunyikan Kata</button>
+      <button data-mode="suku">Per Suku Kata</button>
+      <button data-mode="eja">Eja Nama Huruf</button>
+    </div>
+    <div id="status">Pilih bahasa dan kata, lalu tekan tombol bunyinya.</div>
+  </div>
+</main>
+<script>
+let MAN = null, lang = "ar", terpilih = null;
+const $ = s => document.querySelector(s);
+const LABEL = { ar: "Arab", id: "Indonesia", en: "Inggris" };
+const LABEL_MODE = { kata: "Kata utuh", suku: "Per suku kata", eja: "Eja nama huruf" };
+const pemain = new Audio();
+let antrian = [], indeks = 0, modeAktif = "";
+
+pemain.addEventListener("ended", () => {
+  indeks++;
+  if (indeks < antrian.length) { pemain.src = antrian[indeks]; pemain.play().catch(() => {}); }
+  else $("#status").textContent = LABEL_MODE[modeAktif] + " selesai untuk kata " + terpilih.kata + ".";
+});
+
+function gambarTabs() {
+  $("#tabs").innerHTML = "";
+  Object.keys(MAN).forEach(l => {
+    const b = document.createElement("button");
+    b.textContent = LABEL[l]; b.className = l === lang ? "aktif" : "";
+    b.onclick = () => { lang = l; terpilih = MAN[l][0]; gambarTabs(); gambarKata(); };
+    $("#tabs").appendChild(b);
+  });
+}
+function gambarKata() {
+  $("#kataBaris").innerHTML = "";
+  MAN[lang].forEach(w => {
+    const b = document.createElement("button");
+    b.textContent = w.kata; b.className = terpilih && w.id === terpilih.id ? "aktif" : "";
+    if (lang === "ar") b.dir = "rtl";
+    b.onclick = () => { terpilih = w; gambarKata(); };
+    $("#kataBaris").appendChild(b);
+  });
+  $("#pecahan").innerHTML = "";
+  if (terpilih) terpilih.pecahan.forEach(p => {
+    const s = document.createElement("span"); s.textContent = p; $("#pecahan").appendChild(s);
+  });
+}
+document.querySelectorAll(".mode-baris button").forEach(b => {
+  b.onclick = () => {
+    if (!terpilih) return;
+    modeAktif = b.dataset.mode;
+    antrian = terpilih.modes[modeAktif]; indeks = 0;
+    $("#status").textContent = "Memutar " + LABEL_MODE[modeAktif] + ": " + terpilih.kata + " (" + antrian.length + " klip)";
+    pemain.src = antrian[0]; pemain.play().catch(() => {});
+  };
+});
+fetch("manifest.json").then(r => r.json()).then(m => {
+  MAN = m; terpilih = MAN.ar[0]; gambarTabs(); gambarKata();
+}).catch(e => { $("#status").textContent = "Gagal memuat daftar kata: " + e.message; });
+</script>
+</body>
+</html>
