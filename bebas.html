@@ -172,13 +172,33 @@ function tampilPotongan(list) {
 }
 function sorot(i) { [...$("potongan").children].forEach((el, j) => el.classList.toggle("aktif", j === i)); }
 function putar(blob) {
-  return new Promise((resolve, reject) => {
+  /* Pemutaran tidak boleh menggantung selamanya: sebagian browser bisa
+     membuat elemen media macet tanpa memicu ended maupun error. Semua
+     jalan keluar (selesai, galat, batas waktu) menutup potongan ini agar
+     urutan lanjut dan tombol selalu hidup lagi. */
+  return new Promise((resolve) => {
     const p = $("pemain");
     const url = URL.createObjectURL(blob);
+    let selesai = false, timer = null, cap = null;
+    const akhiri = (d, gagal) => {
+      if (selesai) return; selesai = true;
+      if (timer) clearTimeout(timer);
+      if (cap) clearTimeout(cap);
+      URL.revokeObjectURL(url);
+      resolve({ d: d || 0, gagal: !!gagal });
+    };
+    p.onloadedmetadata = () => {
+      const laju = $("lambat").checked ? 0.78 : 1;
+      const perkiraan = (p.duration && isFinite(p.duration)) ? p.duration / laju + 8 : 20;
+      timer = setTimeout(() => akhiri(p.duration || 0, false), perkiraan * 1000);
+    };
+    p.onended = () => akhiri(p.duration || 0, false);
+    p.onerror = () => akhiri(0, true);
+    cap = setTimeout(() => akhiri(0, true), 30000);
     p.src = url; p.playbackRate = $("lambat").checked ? 0.78 : 1;
-    p.onended = () => { const d = p.duration || 0; URL.revokeObjectURL(url); resolve(d); };
-    p.onerror = () => { URL.revokeObjectURL(url); reject(new Error("audio gagal diputar")); };
-    p.play().catch(reject);
+    try { p.load(); } catch {}
+    const janji = p.play();
+    if (janji && janji.catch) janji.catch(() => setTimeout(() => akhiri(0, true), 1500));
   });
 }
 async function bunyikan(segmen, label) {
@@ -188,16 +208,19 @@ async function bunyikan(segmen, label) {
     for (const l of [...new Set(segmen.map(s => s.lang))]) {
       if (!siap[l]) throw new Error("model " + SUARA[l].label + " belum disiapkan, tekan tombol Siapkan dulu");
     }
-    let total = 0;
+    let total = 0, gagalPutar = 0;
     for (let i = 0; i < segmen.length; i++) {
       sorot(i);
       $("status").textContent = label + " — potongan " + (i + 1) + " dari " + segmen.length + ": " + segmen[i].tampil;
       const s = await dapatSesi(segmen[i].lang);
       const blob = await s.predict(segmen[i].teks);
-      total += await putar(blob);
+      const hasil = await putar(blob);
+      total += hasil.d;
+      if (hasil.gagal) gagalPutar++;
     }
     sorot(-1);
-    $("status").textContent = label + " selesai. Total bunyi " + total.toFixed(2) + " detik, disintesis Piper di browser ini.";
+    $("status").textContent = label + " selesai. Total bunyi " + total.toFixed(2) + " detik, disintesis Piper di browser ini." +
+      (gagalPutar ? " Catatan: pemutar browser ini menolak " + gagalPutar + " potongan media." : "");
   } catch (e) {
     sorot(-1);
     $("status").textContent = "Gagal: " + (e && e.message ? e.message : String(e));
