@@ -176,10 +176,10 @@
   </div>
   <h1>Kartu Hafalan</h1>
   <p class="sub">Isi daftar di bawah (satu baris satu kartu: tulisan = arti), berapa pun jumlahnya,
-  maksimal 100 kartu. Semua kartu ikut, tampil berurutan seperti ditulis, dan dibagi menjadi
-  sesi sesi sebesar angka per sesi yang dipilih. Tiap sesi dihafalkan dulu selama 3 menit, lalu
-  diuji: tiap kartu dua kolom, satu tampil dan satu tertutup, yang tertutup diacak ulang setiap
-  dibuka. Sesudah satu sesi dikuasai, Lanjut membawanya ke babak pengumpulan berisi semua sesi
+  maksimal 100 kartu. Semua kartu ikut dan dibagi berurutan seperti ditulis menjadi
+  sesi sesi sebesar angka per sesi yang dipilih. Tiap sesi dihafalkan dulu selama 3 menit dalam
+  urutan tulisannya, lalu diuji dengan posisi kartu teracak: tiap kartu dua kolom, satu tampil
+  dan satu tertutup, yang tertutup diacak ulang setiap dibuka. Sesudah satu sesi dikuasai, Lanjut membawanya ke babak pengumpulan berisi semua sesi
   sebelumnya, baru masuk sesi berikutnya. Yang tampil di layar hanya angka kemajuan. Semua
   berjalan di perangkat ini, tanpa API dan tanpa internet.</p>
 
@@ -292,6 +292,7 @@ let perSesi = 4;
 let langkah = [];      // rangkaian babak: {jenis: "sesi"|"kumpul", ke: n}
 let langkahKe = 0;
 let ronde = [];        // kartu pada babak yang sedang berjalan
+let urutan = [];       // urutan tampil kartu pada tahap uji, selalu diacak
 let bukaIdx = -1;
 let sisiTampil = "a";
 let terjawab = false;
@@ -439,9 +440,10 @@ function mulaiReview() {
   $("areaLangkah").style.display = "none";
   $("areaReview").style.display = "";
   $("cipTahap").textContent = langkahIni().jenis === "sesi" ? "TAHAP UJI" : "PENGUMPULAN";
+  urutan = kocok(ronde.map((_, i) => i));
   bukaIdx = -1; terjawab = false; sibuk = false;
   $("info").textContent = infoTeks();
-  $("statusSesi").textContent = "Ketuk satu kartu. Satu kolom tampil, satu tertutup, diacak setiap dibuka. Jawab yang tertutup dari ingatan, ketuk kolom tertutupnya untuk memeriksa, lalu nilai sendiri.";
+  $("statusSesi").textContent = "Ketuk satu kartu. Satu kolom tampil, satu tertutup, diacak setiap dibuka, dan posisi kartu diacak lagi sesudah tiap penilaian. Jawab yang tertutup dari ingatan, ketuk kolom tertutupnya untuk memeriksa, lalu nilai sendiri.";
   gambarReview();
 }
 
@@ -475,7 +477,8 @@ function kolomKartu(c, sisi) {
 function gambarReview() {
   const kisi = $("kisiReview");
   kisi.innerHTML = "";
-  ronde.forEach((c, i) => {
+  urutan.forEach(i => {
+    const c = ronde[i];
     const d = document.createElement("div");
     if (i === bukaIdx) {
       d.className = "kartu buka" + (baruBuka ? " baruBuka" : "");
@@ -554,7 +557,13 @@ async function nilai(benar) {
     sibuk = false;
     return;
   }
+  const kisi = $("kisiReview");
+  if (!gerakDikurangi()) kisi.style.opacity = "0";
+  await jeda(120);
+  if (gen !== generasiSesi) { sibuk = false; return; }
+  urutan = kocok(urutan);
   gambarReview();
+  kisi.style.opacity = "1";
   sibuk = false;
 }
 
