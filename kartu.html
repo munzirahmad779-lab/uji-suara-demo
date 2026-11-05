@@ -21,8 +21,11 @@
   body.tema-terang { --teal: #1E6B74; --teal2: #227C88; --teal3: #1F7A84; --krem: #FFFDF4;
     --emas: #FFC93F; --emas-gelap: #D9A41F; --gelap: #123A3E; --garis: #7FB5AE;
     --sekunder: #E6F4F1; --keterangan: #49716C; --batang: #D8EDE9; --subteks: #FFFFFF; --teksterang: #FFFFFF; }
-  body { font-family: system-ui, sans-serif; margin: 0; color: var(--teksterang);
-    background: linear-gradient(160deg, var(--teal), var(--teal2) 55%, var(--teal3)) fixed; }
+  body { font-family: system-ui, "Segoe UI", sans-serif; margin: 0; color: var(--teksterang);
+    background:
+      radial-gradient(1100px 560px at 88% -5%, rgba(255,217,138,.16), transparent 60%),
+      radial-gradient(900px 520px at -12% 108%, rgba(255,255,255,.09), transparent 55%),
+      linear-gradient(160deg, var(--teal), var(--teal2) 55%, var(--teal3)) fixed; }
   .barisTema { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 4px 0 10px; }
   .barisTema .labelTema { font-size: 13px; font-weight: 700; }
   .btnTema { display: inline-flex; align-items: center; gap: 7px; padding: 12px 15px; font-size: 13px; font-weight: 700;
@@ -30,14 +33,17 @@
   .btnTema .contoh { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--emas); display: inline-block; }
   .btnTema.aktif { background: var(--emas); color: #20302a; border-color: var(--emas); }
   main { max-width: 680px; margin: 0 auto; padding: 20px 16px 44px; }
-  h1 { font-size: 22px; margin: 8px 0 4px; }
+  h1 { font-size: 22px; margin: 8px 0 4px; font-weight: 800; letter-spacing: -.5px; }
   p.sub { color: var(--subteks); font-size: 14px; line-height: 1.55; }
   body.sesiAktif h1, body.sesiAktif p.sub, body.sesiAktif .barisTema { display: none; }
-  .kotak { background: var(--krem); color: var(--gelap); border-radius: 14px; padding: 16px; margin-top: 14px; }
-  textarea { width: 100%; box-sizing: border-box; min-height: 200px; padding: 10px; font-size: 18px; line-height: 1.7;
-    border: 2px solid var(--garis); border-radius: 10px; text-align: left;
+  .kotak { background: var(--krem); color: var(--gelap); border-radius: 20px; padding: 16px; margin-top: 14px;
+    border: 1px solid rgba(255,255,255,.4); box-shadow: 0 24px 60px rgba(0,0,0,.30), 0 3px 10px rgba(0,0,0,.12); }
+  textarea { width: 100%; box-sizing: border-box; min-height: 200px; padding: 12px; font-size: 18px; line-height: 1.7;
+    border: 2px solid var(--garis); border-radius: 12px; text-align: left; background: #fff;
     font-family: "Amiri", "Traditional Arabic", "Scheherazade New", system-ui, serif; }
-  button.aksi { padding: 12px 16px; font-size: 15px; font-weight: 700; border: 0; border-radius: 10px; background: var(--teal); color: #fff; cursor: pointer; }
+  textarea:focus, input:focus, select:focus { outline: 3px solid rgba(201,146,46,.45); outline-offset: 1px; }
+  button.aksi { padding: 12px 16px; font-size: 15px; font-weight: 700; border: 0; border-radius: 12px; background: var(--teal); color: #fff; cursor: pointer;
+    box-shadow: 0 8px 20px rgba(11,61,46,.25); }
   button.aksi.sekunder { background: var(--sekunder); color: var(--teal); border: 2px solid var(--teal); }
   .baris { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
   #info { font-size: 15px; font-weight: 700; color: var(--teal); }
@@ -50,18 +56,22 @@
   #daftarRuang button.mini.benar { background: var(--sekunder); color: var(--teal); border: 2px solid var(--teal); }
   .barisAkhiri { position: sticky; bottom: 10px; background: var(--krem); padding: 10px 0 2px; z-index: 3; }
   .kisi { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
-  .kartu { border: 2px solid var(--teal); border-radius: 12px; padding: 10px; text-align: center; background: var(--krem); position: relative; }
+  .kartu { border: 2px solid var(--teal); border-radius: 16px; padding: 10px; text-align: center; background: var(--krem); position: relative;
+    box-shadow: 0 6px 18px rgba(20,52,58,.10); }
   .kartu .a { font-size: 30px; font-family: "Amiri", "Traditional Arabic", "Scheherazade New", serif; line-height: 1.7; }
   .kartu .b { font-size: 16px; color: var(--teal); font-weight: 700; margin-top: 4px; }
   #kisiReview .kartu { height: 224px; display: flex; flex-direction: column; box-sizing: border-box; }
   #kisiReview .kartu.buka { height: auto; min-height: 224px; }
   .kartu.tutup { background-color: var(--teal); color: var(--emas); cursor: pointer; align-items: center; justify-content: center;
-    background-image: radial-gradient(rgba(255,217,138,.16) 1.5px, transparent 1.7px); background-size: 16px 16px; }
-  .kartu.tutup .tanya { font-size: 46px; font-weight: 800; line-height: 1; }
+    background-image: radial-gradient(rgba(255,217,138,.15) 1.5px, transparent 1.7px), linear-gradient(150deg, var(--teal3), var(--teal) 70%); background-size: 16px 16px, cover;
+    box-shadow: 0 10px 24px rgba(11,61,46,.30); }
+  .kartu.tutup .tanya { font-size: 46px; font-weight: 800; line-height: 1; width: 84px; height: 84px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.09); border: 2px solid rgba(255,217,138,.40); }
   .kartu.tutup .nama { font-size: 16px; font-weight: 800; margin-top: 6px; }
   .kartu.tutup .mikro { font-size: 11px; color: var(--subteks); margin-top: 6px; min-height: 14px; }
   .kartu.tutup .titik { position: absolute; top: 8px; right: 8px; width: 13px; height: 13px; border-radius: 50%; background: var(--emas); border: 2px solid var(--teal); }
-  .kartu.buka { border-color: var(--emas-gelap); border-width: 3px; padding: 9px; }
+  .kartu.buka { border-color: var(--emas-gelap); border-width: 3px; padding: 9px;
+    box-shadow: 0 16px 36px rgba(20,52,58,.20), 0 0 0 5px rgba(255,217,138,.30); }
   .kartu.lulus { border-color: var(--emas-gelap); align-items: center; justify-content: center; }
   .kartu.lulus .cip { margin-top: 8px; font-size: 12px; font-weight: 800; letter-spacing: 1px; background: var(--teal); color: var(--emas); border-radius: 999px; padding: 4px 12px; }
   .kolom { padding: 6px 4px; }
@@ -70,14 +80,17 @@
   .kolom .isi { font-size: 28px; margin-top: 2px; line-height: 1.6; font-family: "Amiri", "Traditional Arabic", "Scheherazade New", system-ui, serif; }
   .kolom .isi.arti { font-size: 20px; font-weight: 700; color: var(--teal); font-family: system-ui, sans-serif; }
   .kolom.tersembunyi { cursor: pointer; flex: 1; display: flex; flex-direction: column; }
-  .penutup { flex: 1; min-height: 52px; margin-top: 4px; border-radius: 8px; background: var(--teal); color: var(--emas);
+  .penutup { flex: 1; min-height: 52px; margin-top: 4px; border-radius: 12px; background: linear-gradient(150deg, var(--teal3), var(--teal) 70%); color: var(--emas);
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
     background-image: radial-gradient(rgba(255,217,138,.16) 1.5px, transparent 1.7px); background-size: 16px 16px; }
   .penutup .tanyaKecil { font-size: 26px; font-weight: 800; line-height: 1; }
   .penutup .mikro { font-size: 11px; color: var(--subteks); }
   .slotNilai { height: 48px; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: auto; }
   .slotNilai .petunjukSlot { font-size: 12px; color: var(--keterangan); }
-  button.mini { padding: 12px 16px; font-size: 14px; font-weight: 700; border-radius: 8px; border: 0; cursor: pointer; }
+  button.mini { padding: 12px 16px; font-size: 14px; font-weight: 700; border-radius: 10px; border: 0; cursor: pointer; }
+  #daftarRuang > div { box-shadow: 0 4px 14px rgba(20,52,58,.10); }
+  #areaLangkah { text-align: center; padding: 26px 6px 10px; }
+  #areaLangkah .angkanya, #teksLangkah { font-size: 30px; font-weight: 800; color: var(--teal); }
   button.mini.benar { background: var(--teal); color: #fff; }
   button.mini.salah { background: var(--sekunder); color: var(--teal); border: 2px solid var(--teal); }
   #areaTuntas { text-align: center; padding: 18px 6px 8px; }
@@ -95,6 +108,9 @@
     @keyframes kedipSalah { 40% { box-shadow: 0 0 0 5px #c0563a; } }
     button.aksi:active, button.mini:active, .kartu.tutup:active, .kolom.tersembunyi:active { transform: scale(.97); }
     button.aksi, button.mini, .kartu.tutup, .kolom.tersembunyi { transition: transform .09s ease; }
+    button.aksi:hover, button.mini:hover { transform: translateY(-1px); }
+    .kartu.tutup:hover { transform: translateY(-2px); }
+    .kartu.tutup { transition: transform .12s ease; }
     #batangWaktu { transition: width 1s linear; }
   }
   @media (min-width: 640px) {
@@ -128,7 +144,8 @@
     #kisiReview { grid-template-columns: repeat(4, 1fr); }
     #kisiReview .kartu { height: 300px; }
     #kisiReview .kartu.buka { min-height: 300px; }
-    .kartu.tutup .tanya { font-size: 72px; }
+    .kartu.tutup .tanya { font-size: 72px; width: 118px; height: 118px; }
+    #teksLangkah { font-size: 38px; }
     .kartu.tutup .nama { font-size: 18px; }
     .kolom .isi { font-size: 34px; }
     .kolom .isi.arti { font-size: 23px; }
@@ -159,12 +176,12 @@
   </div>
   <h1>Kartu Hafalan</h1>
   <p class="sub">Isi daftar di bawah (satu baris satu kartu: tulisan = arti), berapa pun jumlahnya,
-  maksimal 100 kartu. Sistem membaginya menjadi set 4 kartu: tiap set dihafalkan dulu selama
-  3 menit, lalu diuji dalam kumpulan yang tumbuh, semua kartu set sebelumnya ikut terbawa ke
-  ujian berikutnya. Pada tahap uji tiap kartu punya dua kolom; satu kolom tampil, satu tertutup,
-  dan yang tertutup diacak ulang setiap kartu dibuka. Kartu lulus sesudah dua kali benar dalam
-  campuran; sekali salah, hitungan benarnya kembali ke nol. Semua berjalan di perangkat ini,
-  tanpa API dan tanpa internet.</p>
+  maksimal 100 kartu. Semua kartu ikut, tampil berurutan seperti ditulis, dan dibagi menjadi
+  sesi sesi sebesar angka per sesi yang dipilih. Tiap sesi dihafalkan dulu selama 3 menit, lalu
+  diuji: tiap kartu dua kolom, satu tampil dan satu tertutup, yang tertutup diacak ulang setiap
+  dibuka. Sesudah satu sesi dikuasai, Lanjut membawanya ke babak pengumpulan berisi semua sesi
+  sebelumnya, baru masuk sesi berikutnya. Yang tampil di layar hanya angka kemajuan. Semua
+  berjalan di perangkat ini, tanpa API dan tanpa internet.</p>
 
   <div class="kotak" id="kotakIsi">
     <div class="panelEditor">
@@ -182,10 +199,10 @@
 مَكْتَبٌ = meja
 مَسْجِدٌ = masjid</textarea>
     <div style="margin-top:12px; display:flex; align-items:center; gap:8px; flex-wrap:wrap">
-      <label for="jumlahKartu" style="font-size:13px;font-weight:600">Jumlah kartu yang dipakai:</label>
+      <label for="jumlahKartu" style="font-size:13px;font-weight:600">Jumlah kartu per sesi:</label>
       <input type="number" id="jumlahKartu" min="2" placeholder="mis. 10" style="width:96px; padding:9px; font-size:16px; border-radius:8px; border:2px solid var(--garis); background:#fff; color:#20302a">
     </div>
-    <div style="font-size:12px; color:var(--keterangan); margin-top:4px">Kosongkan untuk memakai semua kartu. Bila daftar lebih banyak dari angka ini, kartu dipilih acak dari daftar setiap sesi dimulai.</div>
+    <div style="font-size:12px; color:var(--keterangan); margin-top:4px">Semua kartu di daftar ikut, berurutan seperti ditulis, dibagi menjadi sesi sebesar angka ini. Misal 12 kartu dengan angka 3 menjadi 4 sesi berisi 3 kartu. Kosongkan untuk 4 kartu per sesi.</div>
     <div style="margin-top:12px; display:flex; align-items:center; gap:8px; flex-wrap:wrap">
       <label for="namaRuang" style="font-size:13px;font-weight:600">Nama ruang:</label>
       <input type="text" id="namaRuang" maxlength="60" placeholder="mis. Pertemuan 1, Kosakata 1, Rumus 1" style="flex:1; min-width:180px; padding:9px; font-size:15px; border-radius:8px; border:2px solid var(--garis); background:#fff; color:#20302a">
@@ -237,17 +254,22 @@
     </div>
 
     <div id="areaReview" style="display:none">
-      <div class="baris" style="margin-top:0">
-        <button class="aksi sekunder" id="btnAcak">Acak Ulang Kartu</button>
+      <div class="kisi" id="kisiReview" style="margin-top:0"></div>
+    </div>
+
+    <div id="areaLangkah" style="display:none">
+      <div class="angkanya" id="teksLangkah"></div>
+      <div class="baris" style="justify-content:center">
+        <button class="aksi sekunder" id="btnUlangiLangkah">Ulangi Babak Ini</button>
+        <button class="aksi" id="btnLanjutLangkah">Lanjut</button>
       </div>
-      <div class="kisi" id="kisiReview"></div>
     </div>
 
     <div id="areaTuntas" style="display:none">
       <div class="besar">Sesi Tuntas</div>
       <div class="ringkas" id="ringkasTuntas"></div>
       <div class="baris" style="justify-content:center">
-        <button class="aksi" id="btnMainLagi">Main Lagi dengan Daftar Ini</button>
+        <button class="aksi" id="btnMainLagi">Ulangi dari Awal</button>
       </div>
     </div>
 
@@ -265,16 +287,16 @@ const gerakDikurangi = () => window.matchMedia("(prefers-reduced-motion: reduce)
 const jeda = ms => new Promise(r => setTimeout(r, gerakDikurangi() ? 0 : ms));
 function kocok(arr) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = acak(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 
-let kartu = [];        // {a, b, benar, salah, lulus}
-let setKe = 0;
-const setUkuran = 4;
-let urutan = [];
+let kartu = [];        // {a, b, benar, salah, lulus} — urutan selalu seperti ditulis
+let perSesi = 4;
+let langkah = [];      // rangkaian babak: {jenis: "sesi"|"kumpul", ke: n}
+let langkahKe = 0;
+let ronde = [];        // kartu pada babak yang sedang berjalan
 let bukaIdx = -1;
 let sisiTampil = "a";
 let terjawab = false;
 let baruBuka = false;  // animasi masuk hanya pada render sesudah membuka
 let sibuk = false;     // kunci masukan selama pengakuan penilaian
-let tonggak = { setengah: false, sisaDua: false };
 let sisaBelajar = 180, jamBelajar = null;
 let catatanMulai = "";
 let generasiSesi = 0;
@@ -309,54 +331,56 @@ function parseDaftar(teks) {
 }
 function kunciKartu(c) { return c.a + " " + c.b; }
 
-function kumpulanSampaiSet() { return kartu.slice(0, Math.min(kartu.length, (setKe + 1) * setUkuran)); }
-function totalSet() { return Math.ceil(kartu.length / setUkuran); }
+function totalSesi() { return Math.ceil(kartu.length / perSesi); }
+function langkahIni() { return langkah[langkahKe]; }
+function labelLangkah(l) { return l.jenis === "sesi" ? "Sesi " + l.ke : "Pengumpulan " + l.ke; }
 function infoTeks() {
-  const k = kumpulanSampaiSet();
-  const lulus = k.filter(c => c.lulus).length;
-  return "Set " + (setKe + 1) + "/" + totalSet() + " · Kumpulan " + k.length + " · Lulus " + lulus + "/" + k.length;
+  const l = langkahIni();
+  const lulus = ronde.filter(c => c.lulus).length;
+  return labelLangkah(l) + " · " + lulus + "/" + ronde.length;
 }
 
 function mulaiSesi() {
   clearInterval(jamBelajar);
   const { hasil, dibuang, duplikat } = parseDaftar($("daftar").value);
   if (hasil.length < 2) { $("statusIsi").textContent = "Isi dulu minimal 2 kartu dengan format tulisan = arti."; return; }
+  if (hasil.length > MAKS_KARTU) {
+    $("statusIsi").textContent = "Daftar ini berisi " + hasil.length + " kartu; batas satu sesi penuh adalah " + MAKS_KARTU + " kartu. Kurangi daftarnya dulu.";
+    return;
+  }
   const catatan = [];
   if (dibuang > 0) catatan.push(dibuang + " baris dilewati karena formatnya bukan tulisan = arti.");
   if (duplikat > 0) catatan.push("Ada " + duplikat + " kartu duplikat persis di daftar.");
   kartu = hasil;
   const mintaTeks = ($("jumlahKartu").value || "").trim();
   const minta = parseInt(mintaTeks, 10);
-  if (Number.isFinite(minta) && minta >= 2 && minta < kartu.length) {
-    const totalDaftar = kartu.length;
-    kartu = kocok(kartu).slice(0, minta);
-    catatan.push("Dipakai " + kartu.length + " kartu yang dipilih acak dari " + totalDaftar + " kartu di daftar.");
-  } else if (mintaTeks !== "") {
-    catatan.push("Angka jumlah tidak dipakai (harus antara 2 dan " + (kartu.length - 1) + "); semua kartu dipakai.");
-  }
-  if (kartu.length > MAKS_KARTU) {
-    $("statusIsi").textContent = "Daftar ini memakai " + kartu.length + " kartu; batas satu sesi adalah " + MAKS_KARTU + " kartu. Kurangi daftarnya atau pakai kolom jumlah untuk memilih sebagian.";
-    kartu = [];
-    return;
-  }
-  const r = sedangEdit ? ruang.find(x => x.id === sedangEdit) : null;
-  if (r && r.terakhir && Array.isArray(r.terakhir.pool) && r.terakhir.pool.length) {
-    const kunciPool = new Set(r.terakhir.pool);
-    const dulu = kartu.filter(c => kunciPool.has(kunciKartu(c)));
-    const baru = kartu.filter(c => !kunciPool.has(kunciKartu(c)));
-    if (dulu.length && baru.length) {
-      kartu = dulu.concat(baru);
-      catatan.push("Kumpulan pertemuan lalu (" + dulu.length + " kartu) dibuka lebih dulu sebelum kartu baru.");
-    }
-  }
+  perSesi = 4;
+  if (Number.isFinite(minta) && minta >= 2) perSesi = Math.min(minta, kartu.length);
+  else if (mintaTeks !== "") catatan.push("Angka per sesi tidak dipakai (harus 2 atau lebih); dipakai 4 per sesi.");
   catatanMulai = catatan.join(" ");
+  langkah = [];
+  for (let k = 1; k <= totalSesi(); k++) { langkah.push({ jenis: "sesi", ke: k }); langkah.push({ jenis: "kumpul", ke: k }); }
   generasiSesi++;
-  setKe = 0;
+  langkahKe = 0;
   document.body.classList.add("sesiAktif");
   $("kotakIsi").style.display = "none";
   $("kotakSesi").style.display = "";
   $("areaTuntas").style.display = "none";
-  mulaiBelajar();
+  $("areaLangkah").style.display = "none";
+  mulaiLangkah();
+}
+
+function mulaiLangkah() {
+  const l = langkahIni();
+  ronde = l.jenis === "sesi"
+    ? kartu.slice((l.ke - 1) * perSesi, Math.min(kartu.length, l.ke * perSesi))
+    : kartu.slice(0, Math.min(kartu.length, l.ke * perSesi));
+  ronde.forEach(c => { c.benar = 0; c.salah = 0; c.lulus = false; });
+  bukaIdx = -1; terjawab = false; sibuk = false;
+  $("areaLangkah").style.display = "none";
+  $("areaTuntas").style.display = "none";
+  if (l.jenis === "sesi") mulaiBelajar();
+  else mulaiReview();
 }
 
 function mulaiBelajar() {
@@ -366,7 +390,7 @@ function mulaiBelajar() {
   $("areaTuntas").style.display = "none";
   $("cipTahap").textContent = "TAHAP HAFAL";
   $("info").textContent = infoTeks();
-  const setIni = kartu.slice(setKe * setUkuran, Math.min(kartu.length, (setKe + 1) * setUkuran));
+  const setIni = ronde;
   $("kisiBelajar").innerHTML = "";
   setIni.forEach(c => {
     const d = document.createElement("div");
@@ -381,7 +405,7 @@ function mulaiBelajar() {
   $("keteranganTimer").textContent = "waktu habis, ujian mulai sendiri";
   $("batangLuar").style.display = "";
   $("batangWaktu").style.width = "100%";
-  $("statusSesi").textContent = "Tahap hafal: perhatikan " + setIni.length + " kartu ini. Sesudah siap, akhiri tahap hafal dengan tombol Uji Sekarang." + (setKe === 0 && catatanMulai ? " " + catatanMulai : "");
+  $("statusSesi").textContent = "Tahap hafal: perhatikan " + setIni.length + " kartu ini. Sesudah siap, akhiri tahap hafal dengan tombol Uji Sekarang." + (langkahKe === 0 && catatanMulai ? " " + catatanMulai : "");
   jamBelajar = setInterval(() => {
     const sisa = Math.max(0, Math.ceil((targetWaktu - Date.now()) / 1000));
     sisaBelajar = sisa;
@@ -412,14 +436,12 @@ function mulaiReview() {
   $("batangLuar").style.display = "none";
   $("areaBelajar").style.display = "none";
   $("areaTuntas").style.display = "none";
+  $("areaLangkah").style.display = "none";
   $("areaReview").style.display = "";
-  $("cipTahap").textContent = "TAHAP UJI";
-  const k = kumpulanSampaiSet();
-  urutan = kocok(k.map((_, i) => i));
+  $("cipTahap").textContent = langkahIni().jenis === "sesi" ? "TAHAP UJI" : "PENGUMPULAN";
   bukaIdx = -1; terjawab = false; sibuk = false;
-  tonggak = { setengah: false, sisaDua: false };
   $("info").textContent = infoTeks();
-  $("statusSesi").textContent = "Tahap uji: ketuk satu kartu. Satu kolom tampil, satu tertutup, diacak setiap dibuka. Jawab yang tertutup dari ingatan, ketuk kolom tertutupnya untuk memeriksa, lalu nilai sendiri. Kartu lulus sesudah dua kali benar; sekali salah, hitungan benarnya kembali ke nol.";
+  $("statusSesi").textContent = "Ketuk satu kartu. Satu kolom tampil, satu tertutup, diacak setiap dibuka. Jawab yang tertutup dari ingatan, ketuk kolom tertutupnya untuk memeriksa, lalu nilai sendiri.";
   gambarReview();
 }
 
@@ -453,16 +475,9 @@ function kolomKartu(c, sisi) {
 function gambarReview() {
   const kisi = $("kisiReview");
   kisi.innerHTML = "";
-  urutan.forEach(i => {
-    const c = kartu[i];
+  ronde.forEach((c, i) => {
     const d = document.createElement("div");
-    if (c.lulus) {
-      d.className = "kartu lulus";
-      const a = document.createElement("div"); a.className = "a"; a.style.fontSize = "24px"; a.textContent = c.a; if (arab(c.a)) a.dir = "rtl";
-      const b = document.createElement("div"); b.className = "b"; b.textContent = c.b;
-      const cip = document.createElement("div"); cip.className = "cip"; cip.textContent = "✓ LULUS";
-      d.appendChild(a); d.appendChild(b); d.appendChild(cip);
-    } else if (i === bukaIdx) {
+    if (i === bukaIdx) {
       d.className = "kartu buka" + (baruBuka ? " baruBuka" : "");
       d.id = "kartuTerbuka";
       d.appendChild(kolomKartu(c, "a"));
@@ -480,14 +495,10 @@ function gambarReview() {
       d.appendChild(slot);
     } else {
       d.className = "kartu tutup";
-      if (c.benar > 0) { const t = document.createElement("span"); t.className = "titik"; d.appendChild(t); }
       const t = document.createElement("div"); t.className = "tanya"; t.textContent = "?";
       const n = document.createElement("div"); n.className = "nama"; n.textContent = "Kartu";
       const m = document.createElement("div"); m.className = "mikro";
-      const jejak = [];
-      if (c.benar > 0) jejak.push("sudah benar " + c.benar + "x");
-      if (c.salah > 0) jejak.push("salah " + c.salah + "x");
-      m.textContent = jejak.join(" · ");
+      m.textContent = "";
       d.appendChild(t); d.appendChild(n); d.appendChild(m);
       d.onclick = () => bukaKartu(i);
     }
@@ -516,60 +527,43 @@ async function nilai(benar) {
   if (bukaIdx < 0 || !terjawab || sibuk) return;
   const gen = generasiSesi;
   sibuk = true;
-  const c = kartu[bukaIdx];
+  const c = ronde[bukaIdx];
   const el = $("kartuTerbuka");
   if (el) el.classList.add(benar ? "flashBenar" : "flashSalah");
-  let pesan;
-  if (benar) {
-    c.benar++;
-    if (c.benar >= 2) { c.lulus = true; pesan = "Benar lagi. Kartu itu lulus dan tetap tampil sebagai LULUS di kumpulan ini."; }
-    else pesan = "Benar. Kartu itu ditandai satu titik; sekali benar lagi dalam campuran, ia lulus.";
-  } else {
-    c.benar = 0; c.salah++;
-    pesan = "Masih salah. Hitungan benar kartu ini kembali ke nol; ia tetap di kumpulan dan akan muncul lagi.";
-  }
-  const k = kumpulanSampaiSet();
-  const jmlLulus = k.filter(x => x.lulus).length;
-  if (!tonggak.setengah && jmlLulus * 2 >= k.length && jmlLulus < k.length) { tonggak.setengah = true; pesan += " Separuh kumpulan sudah lulus."; }
-  if (!tonggak.sisaDua && k.length - jmlLulus === 2) { tonggak.sisaDua = true; pesan += " Tinggal dua kartu lagi."; }
-  $("statusSesi").textContent = pesan;
+  if (benar) { c.benar++; if (c.benar >= 2) c.lulus = true; }
+  else { c.benar = 0; c.salah++; }
+  $("statusSesi").textContent = benar ? "Benar." : "Masih salah.";
   await jeda(250);
   if (gen !== generasiSesi) { sibuk = false; return; }
   bukaIdx = -1; terjawab = false;
-  if (k.every(x => x.lulus)) {
+  $("info").textContent = infoTeks();
+  if (ronde.every(x => x.lulus)) {
     gambarReview();
-    $("info").textContent = infoTeks();
-    if ((setKe + 1) * setUkuran >= kartu.length) {
+    if (langkahKe >= langkah.length - 1) {
       $("areaReview").style.display = "none";
       $("cipTahap").textContent = "SELESAI";
-      const seringSalah = kartu.filter(x => x.salah > 0).sort((p, q) => q.salah - p.salah).slice(0, 3);
-      $("ringkasTuntas").textContent = "Seluruh " + kartu.length + " kartu lulus uji campuran dalam " + totalSet() + " set."
-        + (seringSalah.length ? " Paling sering salah: " + seringSalah.map(x => x.a + " (" + x.salah + "x)").join(", ") + "." : " Tidak ada kartu yang pernah salah.")
-        + (sedangEdit ? " Kumpulan ini tersimpan di ruangnya dan akan dibuka lebih dulu pada sesi berikutnya." : " Simpan daftar ini sebagai ruang agar kumpulannya dibuka lebih dulu pada sesi berikutnya.");
+      $("ringkasTuntas").textContent = kartu.length + "/" + kartu.length + " · " + totalSesi() + " sesi · " + totalSesi() + " pengumpulan";
       $("areaTuntas").style.display = "";
-      $("statusSesi").textContent = "Sesi tuntas. Kerja bagus.";
-      simpanTerakhir();
-      sibuk = false;
+      $("statusSesi").textContent = "Semua babak selesai.";
     } else {
-      $("statusSesi").textContent = "Kumpulan " + k.length + " kartu tuntas semua. Lanjut ke set berikutnya; kumpulan akan tumbuh.";
-      await jedaBaca(1200);
-      if (gen !== generasiSesi) { sibuk = false; return; }
-      setKe++;
-      simpanTerakhir();
-      sibuk = false;
-      mulaiBelajar();
+      $("areaReview").style.display = "none";
+      $("teksLangkah").textContent = labelLangkah(langkahIni()) + " · " + ronde.length + "/" + ronde.length;
+      $("areaLangkah").style.display = "";
+      $("statusSesi").textContent = "Babak selesai. Ulangi babak ini, atau lanjut ke babak berikutnya.";
     }
+    sibuk = false;
     return;
   }
-  const kisi = $("kisiReview");
-  if (!gerakDikurangi()) kisi.style.opacity = "0";
-  await jeda(120);
-  urutan = kocok(urutan);
-  $("info").textContent = infoTeks();
   gambarReview();
-  kisi.style.opacity = "1";
   sibuk = false;
 }
+
+$("btnUlangiLangkah").onclick = () => { if (!sibuk) mulaiLangkah(); };
+$("btnLanjutLangkah").onclick = () => {
+  if (sibuk) return;
+  langkahKe++;
+  mulaiLangkah();
+};
 
 let ruang = [];
 let sedangEdit = null;
@@ -596,14 +590,6 @@ function muatRuang() {
   sanitasiRuang();
 }
 function tulisRuang() { try { localStorage.setItem("ruangKartuHafalan", JSON.stringify(ruang)); return true; } catch (e) { return false; } }
-function simpanTerakhir() {
-  if (!sedangEdit) return;
-  const r = ruang.find(x => x.id === sedangEdit);
-  if (!r) return;
-  r.terakhir = { pool: kartu.map(c => kunciKartu(c)), tanggal: Date.now() };
-  tulisRuang();
-  gambarRuang();
-}
 function gambarRuang() {
   const wadah = $("daftarRuang");
   wadah.innerHTML = "";
@@ -616,8 +602,7 @@ function gambarRuang() {
     nm.textContent = r.nama;
     const meta = document.createElement("div");
     meta.style.cssText = "font-size:12px;color:var(--keterangan);margin:2px 0 8px";
-    meta.textContent = hitungKartu(r.daftar) + " kartu · " + new Date(r.diubah).toLocaleDateString("id-ID", { day: "numeric", month: "short" })
-      + (r.terakhir ? " · main terakhir " + new Date(r.terakhir.tanggal).toLocaleDateString("id-ID", { day: "numeric", month: "short" }) : "");
+    meta.textContent = hitungKartu(r.daftar) + " kartu · " + new Date(r.diubah).toLocaleDateString("id-ID", { day: "numeric", month: "short" });
     const bar = document.createElement("div");
     bar.style.cssText = "display:flex;gap:8px;flex-wrap:wrap";
     const bBuka = document.createElement("button");
@@ -767,21 +752,6 @@ try { temaAwal = localStorage.getItem("temaKartuHafalan") || "zamrud"; } catch (
 if (!["zamrud", "biru", "terang"].includes(temaAwal)) temaAwal = "zamrud";
 pasangTema(temaAwal);
 
-$("btnAcak").onclick = async () => {
-  if (sibuk) return;
-  if (terjawab) { $("statusSesi").textContent = "Nilai dulu kartu yang sedang terbuka sebelum mengacak."; return; }
-  sibuk = true;
-  bukaIdx = -1; terjawab = false;
-  const kisi = $("kisiReview");
-  if (!gerakDikurangi()) kisi.style.opacity = "0";
-  await jeda(120);
-  urutan = kocok(urutan);
-  gambarReview();
-  kisi.style.opacity = "1";
-  $("statusSesi").textContent = "Kartu diacak ulang. Progres tiap kartu tetap utuh; buka lagi satu kartu untuk lanjut.";
-  sibuk = false;
-};
-
 $("btnMulai").onclick = mulaiSesi;
 $("btnLanjutReview").onclick = mulaiReview;
 $("btnMainLagi").onclick = mulaiSesi;
@@ -789,7 +759,6 @@ $("btnUlang").onclick = () => {
   const sesiJalan = $("kotakSesi").style.display !== "none" && $("areaTuntas").style.display === "none";
   if (sesiJalan && !window.confirm("Akhiri sesi sekarang? Kemajuan sesi ini akan hilang.")) return;
   generasiSesi++;
-  simpanTerakhir();
   sibuk = false;
   clearInterval(jamBelajar);
   document.body.classList.remove("sesiAktif");
