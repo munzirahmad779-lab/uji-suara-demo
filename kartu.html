@@ -96,6 +96,16 @@
   #areaTuntas { text-align: center; padding: 18px 6px 8px; }
   #areaTuntas .besar { font-size: 30px; font-weight: 800; color: var(--teal); }
   #areaTuntas .ringkas { font-size: 15px; margin-top: 8px; line-height: 1.5; }
+  #petunjukGuru { border: 2px solid var(--garis); border-radius: 12px; padding: 10px 14px; margin-bottom: 14px; background: #fff; }
+  #petunjukGuru summary { font-size: 14px; font-weight: 700; color: var(--teal); cursor: pointer; padding: 4px 0; }
+  #petunjukGuru .isiPetunjuk { font-size: 13.5px; line-height: 1.55; color: #20302a; }
+  #petunjukGuru .isiPetunjuk p { margin: 8px 0; }
+  #spandukTim { border-radius: 14px; padding: 12px 16px; font-size: 22px; font-weight: 800; text-align: center; margin-top: 12px; letter-spacing: .3px; }
+  #tallyTim, #kemajuanTim { font-size: 14px; font-weight: 700; color: var(--teal); text-align: center; margin-top: 8px; }
+  #rincianLangkah { font-size: 16px; font-weight: 700; color: var(--teal); margin-top: 8px; line-height: 1.5; }
+  #areaTimSelesai { text-align: center; padding: 26px 6px 10px; }
+  #teksTimSelesai { font-size: 30px; font-weight: 800; color: var(--teal); }
+  #subTimSelesai { font-size: 14px; color: var(--teal); margin-top: 6px; }
   #kisiReview { transition: none; }
   button:focus-visible, .kartu.tutup:focus-visible, .kolom.tersembunyi:focus-visible { outline: 3px solid var(--emas-gelap); outline-offset: 2px; }
   @media (prefers-reduced-motion: no-preference) {
@@ -155,6 +165,8 @@
     button.mini { padding: 14px 18px; font-size: 15px; }
     #areaTuntas .besar { font-size: 38px; }
     #areaTuntas .ringkas { font-size: 17px; }
+    #spandukTim { font-size: 28px; }
+    #teksTimSelesai { font-size: 38px; }
   }
   @media (min-width: 1600px) {
     main { max-width: 1400px; }
@@ -185,6 +197,22 @@
 
   <div class="kotak" id="kotakIsi">
     <div class="panelEditor">
+    <details id="petunjukGuru">
+      <summary>Petunjuk Guru</summary>
+      <div class="isiPetunjuk">
+        <p><strong>Menyiapkan daftar.</strong> Tulis satu baris untuk satu kartu dengan format tulisan = arti, misalnya kosakata Arab beserta artinya, kata Inggris beserta artinya, atau soal beserta jawabannya. Untuk rumus yang memuat tanda sama dengan, pakai pemisah | antara soal dan jawaban. Satu daftar maksimal 100 kartu.</p>
+        <p><strong>Label kolom.</strong> Pilihan Label kolom menentukan nama kedua kolom pada kartu: Kosakata dan Terjemahan, Rumus dan Jawaban, atau Tulisan dan Arti. Pilih yang sesuai dengan isi daftar.</p>
+        <p><strong>Kartu per sesi.</strong> Semua kartu di daftar ikut serta, berurutan seperti ditulis. Angka kartu per sesi membagi daftar menjadi beberapa sesi: 12 kartu dengan angka 3 menjadi 4 sesi berisi 3 kartu. Kosongkan angka itu untuk memakai 4 kartu per sesi.</p>
+        <p><strong>Menyimpan ruang.</strong> Beri nama lalu tekan Simpan Ruang agar daftar tersimpan di perangkat ini dan bisa dibuka lagi pada pertemuan berikutnya. Ruang dapat diganti namanya, dihapus, dan dicadangkan sebagai teks lewat tombol Salin Cadangan Ruang. Ruang hanya tersimpan di perangkat dan peramban ini.</p>
+        <p><strong>Menjalankan sesi.</strong> Tekan Mulai Sesi. Tiap sesi dimulai dengan tahap hafal selama 3 menit; waktu habis membuat tahap uji mulai sendiri, atau tekan tombol Sudah Hafal, Uji Sekarang untuk mulai lebih awal. Pada tahap uji, siswa menjawab kolom tertutup dari ingatan, mengetuk kolom itu untuk memeriksa, lalu menilai sendiri dengan tombol Saya Benar atau Masih Salah. Satu kartu dianggap dikuasai sesudah dua kali jawaban benar, dan satu jawaban salah mengembalikan hitungannya. Posisi kartu diacak lagi sesudah tiap penilaian. Sesudah satu sesi dikuasai, tombol Lanjut membuka babak pengumpulan yang menguji semua kartu dari sesi pertama sampai sesi itu, baru kemudian sesi berikutnya dimulai. Babak mana pun dapat diulangi dengan tombol Ulangi Babak Ini.</p>
+        <p><strong>Mode Kelas.</strong> Satu papan untuk seluruh kelas, dimainkan bersama dengan bimbingan guru. Ini pilihan bawaan.</p>
+        <p><strong>Mode Tim Bergantian.</strong> Satu papan dimainkan bersama oleh 2 sampai 4 tim. Sesudah tiap penilaian, giliran berpindah ke tim berikutnya, dan spanduk di atas papan menunjukkan tim yang sedang bermain. Jumlah jawaban benar tiap tim dihitung dan ditampilkan sebagai angka pada panel akhir.</p>
+        <p><strong>Mode Tim Bergilir.</strong> Tiap tim mempunyai papannya sendiri yang tampil layar penuh secara bergantian. Tekan tombol Tim Berikutnya untuk berpindah ke tim berikutnya yang belum menuntaskan babak ini. Pergantian terkunci selama ada kartu yang sudah dibuka tetapi belum dinilai; nilai dulu kartu itu. Kemajuan tiap tim tersimpan persis seperti saat ditinggalkan, dan satu babak selesai bila semua tim sudah menuntaskan papannya.</p>
+        <p><strong>Aturan kloning pada mode tim.</strong> Pada tahap uji mode tim, jumlah kartu di papan selalu sama dari awal sampai akhir babak. Kartu yang sudah dikuasai hilang dari papan, dan tempatnya diisi oleh gandaan (klon) kartu yang belum dikuasai, tersebar merata. Bila tinggal satu kartu yang belum dikuasai, seluruh papan berisi klon kartu itu. Membuka dan menilai klon mana pun sama dengan menilai kartu aslinya.</p>
+        <p><strong>Kemajuan hanya angka.</strong> Layar hanya menampilkan angka kemajuan, misalnya 1/3, tanpa keterangan kartu mana yang belum dikuasai, agar siswa tidak menebak dari tanda pada kartu.</p>
+        <p><em>Video tutorial penggunaan kartu ini akan tampil di bagian ini. Untuk sementara, ikuti penjelasan tertulis di atas.</em></p>
+      </div>
+    </details>
     <label for="daftar" style="font-size:13px;font-weight:600;display:block">Daftar kartu, format: tulisan = arti (untuk rumus yang memuat tanda =, pakai pemisah | antara soal dan jawaban)</label>
     <textarea id="daftar" dir="ltr">كِتَابٌ = buku
 بَيْتٌ = rumah
@@ -203,6 +231,23 @@
       <input type="number" id="jumlahKartu" min="2" placeholder="mis. 10" style="width:96px; padding:9px; font-size:16px; border-radius:8px; border:2px solid var(--garis); background:#fff; color:#20302a">
     </div>
     <div style="font-size:12px; color:var(--keterangan); margin-top:4px">Semua kartu di daftar ikut, berurutan seperti ditulis, dibagi menjadi sesi sebesar angka ini. Misal 12 kartu dengan angka 3 menjadi 4 sesi berisi 3 kartu. Kosongkan untuk 4 kartu per sesi.</div>
+    <div style="margin-top:12px; display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+      <label for="pilihMode" style="font-size:13px;font-weight:600">Mode main:</label>
+      <select id="pilihMode" style="padding:9px; font-size:15px; border-radius:8px; border:2px solid var(--garis); background:#fff; color:#20302a">
+        <option value="kelas">Kelas (satu papan untuk semua)</option>
+        <option value="gantian">Tim Bergantian (satu papan, giliran berpindah)</option>
+        <option value="bergilir">Tim Bergilir (papan sendiri, layar penuh bergantian)</option>
+      </select>
+      <span id="wadahTim" style="display:none; align-items:center; gap:8px">
+        <label for="pilihTim" style="font-size:13px;font-weight:600">Jumlah tim:</label>
+        <select id="pilihTim" style="padding:9px; font-size:15px; border-radius:8px; border:2px solid var(--garis); background:#fff; color:#20302a">
+          <option value="2">2 tim</option>
+          <option value="3">3 tim</option>
+          <option value="4">4 tim</option>
+        </select>
+      </span>
+    </div>
+    <div style="font-size:12px; color:var(--keterangan); margin-top:4px">Pada mode tim, kartu yang sudah dikuasai hilang dari papan dan tempatnya diisi klon kartu yang belum dikuasai, jadi jumlah kartu di papan tetap. Aturan lengkapnya ada di Petunjuk Guru di atas.</div>
     <div style="margin-top:12px; display:flex; align-items:center; gap:8px; flex-wrap:wrap">
       <label for="namaRuang" style="font-size:13px;font-weight:600">Nama ruang:</label>
       <input type="text" id="namaRuang" maxlength="60" placeholder="mis. Pertemuan 1, Kosakata 1, Rumus 1" style="flex:1; min-width:180px; padding:9px; font-size:15px; border-radius:8px; border:2px solid var(--garis); background:#fff; color:#20302a">
@@ -246,6 +291,15 @@
     <div class="batangLuar" id="batangLuar" style="display:none"><div id="batangWaktu"></div></div>
     <div id="statusSesi"></div>
 
+    <div id="barTim" style="display:none">
+      <div id="spandukTim"></div>
+      <div id="tallyTim" style="display:none"></div>
+      <div id="kemajuanTim" style="display:none"></div>
+      <div class="baris" style="justify-content:center">
+        <button class="aksi sekunder" id="btnTimBerikutnya" style="display:none">Tim Berikutnya</button>
+      </div>
+    </div>
+
     <div id="areaBelajar">
       <div class="kisi" id="kisiBelajar"></div>
       <div class="baris">
@@ -259,9 +313,18 @@
 
     <div id="areaLangkah" style="display:none">
       <div class="angkanya" id="teksLangkah"></div>
+      <div id="rincianLangkah" style="display:none"></div>
       <div class="baris" style="justify-content:center">
         <button class="aksi sekunder" id="btnUlangiLangkah">Ulangi Babak Ini</button>
         <button class="aksi" id="btnLanjutLangkah">Lanjut</button>
+      </div>
+    </div>
+
+    <div id="areaTimSelesai" style="display:none">
+      <div id="teksTimSelesai"></div>
+      <div id="subTimSelesai"></div>
+      <div class="baris" style="justify-content:center">
+        <button class="aksi" id="btnTimSelesaiLanjut">Tim Berikutnya</button>
       </div>
     </div>
 
@@ -303,6 +366,18 @@ let catatanMulai = "";
 let generasiSesi = 0;
 let targetWaktu = 0;
 let editorKotor = false;
+let modeSesi = "kelas";   // "kelas" | "gantian" | "bergilir"
+let timSesi = 2;
+let giliranTim = 0;       // gantian: tim yang sedang bermain
+let timAktif = 0;         // bergilir: tim yang papannya tampil
+let tallyTim = [0, 0, 0, 0];
+let papanTim = [];        // bergilir: keadaan kartu per tim, sejajar dengan ronde
+const WARNA_TIM = [
+  { latar: "#14532D", teks: "#FBF3DF" },
+  { latar: "#1B3A7A", teks: "#F8F4EA" },
+  { latar: "#E8B93C", teks: "#3A2E05" },
+  { latar: "#9C3A2B", teks: "#FBEDE8" }
+];
 const MAKS_KARTU = 100;
 const jedaBaca = ms => new Promise(r => setTimeout(r, ms));
 const PASANGAN_LABEL = { kosakata: ["Kosakata", "Terjemahan"], rumus: ["Rumus", "Jawaban"], umum: ["Tulisan", "Arti"] };
@@ -337,8 +412,54 @@ function langkahIni() { return langkah[langkahKe]; }
 function labelLangkah(l) { return l.jenis === "sesi" ? "Sesi " + l.ke : "Pengumpulan " + l.ke; }
 function infoTeks() {
   const l = langkahIni();
-  const lulus = ronde.filter(c => c.lulus).length;
+  const lulus = modeSesi === "bergilir" && papanTim[timAktif]
+    ? papanTim[timAktif].filter(s => s.lulus).length
+    : ronde.filter(c => c.lulus).length;
   return labelLangkah(l) + " · " + lulus + "/" + ronde.length;
+}
+
+function keadaanKartu(ri) {
+  if (modeSesi === "bergilir") return papanTim[timAktif][ri];
+  return ronde[ri];
+}
+function papanAktifSelesai() {
+  if (modeSesi === "bergilir") return papanTim.length > 0 && papanTim[timAktif].every(s => s.lulus);
+  return ronde.every(c => c.lulus);
+}
+function semuaTimSelesaiBabak() {
+  return papanTim.length > 0 && papanTim.every(p => p.every(s => s.lulus));
+}
+function susunUrutan() {
+  const n = ronde.length;
+  if (modeSesi === "kelas") { urutan = kocok(ronde.map((_, i) => i)); return; }
+  const belum = [];
+  for (let i = 0; i < n; i++) if (!keadaanKartu(i).lulus) belum.push(i);
+  if (!belum.length) { urutan = []; return; }
+  const slot = belum.slice();
+  let k = 0;
+  while (slot.length < n) { slot.push(belum[k % belum.length]); k++; }
+  urutan = kocok(slot);
+}
+function segarkanBarTim() {
+  const bar = $("barTim");
+  if (modeSesi === "kelas") { bar.style.display = "none"; return; }
+  bar.style.display = "";
+  const aktif = modeSesi === "gantian" ? giliranTim : timAktif;
+  const sp = $("spandukTim");
+  sp.style.background = WARNA_TIM[aktif].latar;
+  sp.style.color = WARNA_TIM[aktif].teks;
+  sp.textContent = modeSesi === "gantian" ? "Giliran Tim " + (aktif + 1) : "Papan Tim " + (aktif + 1);
+  if (modeSesi === "gantian") {
+    $("tallyTim").style.display = "";
+    $("tallyTim").textContent = "Jawaban benar: " + WARNA_TIM.slice(0, timSesi).map((w, t) => "Tim " + (t + 1) + " · " + tallyTim[t]).join("  ·  ");
+    $("kemajuanTim").style.display = "none";
+    $("btnTimBerikutnya").style.display = "none";
+  } else {
+    $("tallyTim").style.display = "none";
+    $("kemajuanTim").style.display = "";
+    $("kemajuanTim").textContent = WARNA_TIM.slice(0, timSesi).map((w, t) => "Tim " + (t + 1) + " · " + (papanTim[t] ? papanTim[t].filter(s => s.lulus).length : 0) + "/" + ronde.length).join("  ·  ");
+    $("btnTimBerikutnya").style.display = "";
+  }
 }
 
 function mulaiSesi() {
@@ -353,6 +474,11 @@ function mulaiSesi() {
   if (dibuang > 0) catatan.push(dibuang + " baris dilewati karena formatnya bukan tulisan = arti.");
   if (duplikat > 0) catatan.push("Ada " + duplikat + " kartu duplikat persis di daftar.");
   kartu = hasil;
+  modeSesi = $("pilihMode").value;
+  if (!["kelas", "gantian", "bergilir"].includes(modeSesi)) modeSesi = "kelas";
+  timSesi = parseInt($("pilihTim").value, 10);
+  if (![2, 3, 4].includes(timSesi)) timSesi = 2;
+  tallyTim = [0, 0, 0, 0];
   const mintaTeks = ($("jumlahKartu").value || "").trim();
   const minta = parseInt(mintaTeks, 10);
   perSesi = 4;
@@ -377,7 +503,12 @@ function mulaiLangkah() {
     ? kartu.slice((l.ke - 1) * perSesi, Math.min(kartu.length, l.ke * perSesi))
     : kartu.slice(0, Math.min(kartu.length, l.ke * perSesi));
   ronde.forEach(c => { c.benar = 0; c.salah = 0; c.lulus = false; });
+  giliranTim = 0; timAktif = 0;
+  papanTim = modeSesi === "bergilir"
+    ? Array.from({ length: timSesi }, () => ronde.map(() => ({ benar: 0, salah: 0, lulus: false })))
+    : [];
   bukaIdx = -1; terjawab = false; sibuk = false;
+  $("areaTimSelesai").style.display = "none";
   $("areaLangkah").style.display = "none";
   $("areaTuntas").style.display = "none";
   if (l.jenis === "sesi") mulaiBelajar();
@@ -389,6 +520,8 @@ function mulaiBelajar() {
   $("areaBelajar").style.display = "";
   $("areaReview").style.display = "none";
   $("areaTuntas").style.display = "none";
+  $("areaTimSelesai").style.display = "none";
+  $("barTim").style.display = "none";
   $("cipTahap").textContent = "TAHAP HAFAL";
   $("info").textContent = infoTeks();
   const setIni = ronde;
@@ -438,12 +571,14 @@ function mulaiReview() {
   $("areaBelajar").style.display = "none";
   $("areaTuntas").style.display = "none";
   $("areaLangkah").style.display = "none";
+  $("areaTimSelesai").style.display = "none";
   $("areaReview").style.display = "";
   $("cipTahap").textContent = langkahIni().jenis === "sesi" ? "TAHAP UJI" : "PENGUMPULAN";
-  urutan = kocok(ronde.map((_, i) => i));
+  susunUrutan();
   bukaIdx = -1; terjawab = false; sibuk = false;
   $("info").textContent = infoTeks();
   $("statusSesi").textContent = "Ketuk satu kartu. Satu kolom tampil, satu tertutup, diacak setiap dibuka, dan posisi kartu diacak lagi sesudah tiap penilaian. Jawab yang tertutup dari ingatan, ketuk kolom tertutupnya untuk memeriksa, lalu nilai sendiri.";
+  segarkanBarTim();
   gambarReview();
 }
 
@@ -477,10 +612,10 @@ function kolomKartu(c, sisi) {
 function gambarReview() {
   const kisi = $("kisiReview");
   kisi.innerHTML = "";
-  urutan.forEach(i => {
+  urutan.forEach((i, slot) => {
     const c = ronde[i];
     const d = document.createElement("div");
-    if (i === bukaIdx) {
+    if (slot === bukaIdx) {
       d.className = "kartu buka" + (baruBuka ? " baruBuka" : "");
       d.id = "kartuTerbuka";
       d.appendChild(kolomKartu(c, "a"));
@@ -503,17 +638,17 @@ function gambarReview() {
       const m = document.createElement("div"); m.className = "mikro";
       m.textContent = "";
       d.appendChild(t); d.appendChild(n); d.appendChild(m);
-      d.onclick = () => bukaKartu(i);
+      d.onclick = () => bukaKartu(slot);
     }
     kisi.appendChild(d);
   });
   baruBuka = false;
 }
 
-function bukaKartu(i) {
+function bukaKartu(slot) {
   if (sibuk) return;
   if (terjawab) { $("statusSesi").textContent = "Nilai dulu kartu yang sedang terbuka sebelum membuka kartu lain."; return; }
-  bukaIdx = i; terjawab = false; baruBuka = true;
+  bukaIdx = slot; terjawab = false; baruBuka = true;
   sisiTampil = Math.random() < 0.5 ? "a" : "b";
   $("statusSesi").textContent = "Kartu dibuka: kolom " + labelSisi(sisiTampil).toLowerCase() + " yang tampil. Jawab kolom tertutupnya dari ingatan.";
   gambarReview();
@@ -530,27 +665,52 @@ async function nilai(benar) {
   if (bukaIdx < 0 || !terjawab || sibuk) return;
   const gen = generasiSesi;
   sibuk = true;
-  const c = ronde[bukaIdx];
+  const st = keadaanKartu(urutan[bukaIdx]);
   const el = $("kartuTerbuka");
   if (el) el.classList.add(benar ? "flashBenar" : "flashSalah");
-  if (benar) { c.benar++; if (c.benar >= 2) c.lulus = true; }
-  else { c.benar = 0; c.salah++; }
+  if (benar) { st.benar++; if (st.benar >= 2) st.lulus = true; }
+  else { st.benar = 0; st.salah++; }
+  if (modeSesi === "gantian") {
+    if (benar) tallyTim[giliranTim]++;
+    giliranTim = (giliranTim + 1) % timSesi;
+  }
   $("statusSesi").textContent = benar ? "Benar." : "Masih salah.";
   await jeda(250);
   if (gen !== generasiSesi) { sibuk = false; return; }
   bukaIdx = -1; terjawab = false;
   $("info").textContent = infoTeks();
-  if (ronde.every(x => x.lulus)) {
-    gambarReview();
-    if (langkahKe >= langkah.length - 1) {
+  if (papanAktifSelesai()) {
+    $("barTim").style.display = "none";
+    if (modeSesi === "bergilir" && !semuaTimSelesaiBabak()) {
       $("areaReview").style.display = "none";
+      $("teksTimSelesai").textContent = "Tim " + (timAktif + 1) + " · " + ronde.length + "/" + ronde.length;
+      const tuntas = papanTim.filter(p => p.every(s => s.lulus)).length;
+      $("subTimSelesai").textContent = tuntas + " dari " + timSesi + " tim sudah menuntaskan babak ini.";
+      $("areaTimSelesai").style.display = "";
+      $("statusSesi").textContent = "Papan Tim " + (timAktif + 1) + " selesai. Lanjut ke tim berikutnya yang belum tuntas.";
+      sibuk = false;
+      return;
+    }
+    if (modeSesi === "kelas") gambarReview();
+    $("areaReview").style.display = "none";
+    if (langkahKe >= langkah.length - 1) {
       $("cipTahap").textContent = "SELESAI";
-      $("ringkasTuntas").textContent = kartu.length + "/" + kartu.length + " · " + totalSesi() + " sesi · " + totalSesi() + " pengumpulan";
+      let teks = kartu.length + "/" + kartu.length + " · " + totalSesi() + " sesi · " + totalSesi() + " pengumpulan";
+      if (modeSesi === "gantian") teks += " · Jawaban benar: " + WARNA_TIM.slice(0, timSesi).map((w, t) => "Tim " + (t + 1) + " · " + tallyTim[t]).join(" · ");
+      if (modeSesi === "bergilir") teks += " · " + WARNA_TIM.slice(0, timSesi).map((w, t) => "Tim " + (t + 1) + " · " + kartu.length + "/" + kartu.length).join(" · ");
+      $("ringkasTuntas").textContent = teks;
       $("areaTuntas").style.display = "";
       $("statusSesi").textContent = "Semua babak selesai.";
     } else {
-      $("areaReview").style.display = "none";
       $("teksLangkah").textContent = labelLangkah(langkahIni()) + " · " + ronde.length + "/" + ronde.length;
+      const rincian = $("rincianLangkah");
+      if (modeSesi === "gantian") {
+        rincian.textContent = "Jawaban benar: " + WARNA_TIM.slice(0, timSesi).map((w, t) => "Tim " + (t + 1) + " · " + tallyTim[t]).join(" · ");
+        rincian.style.display = "";
+      } else if (modeSesi === "bergilir") {
+        rincian.textContent = WARNA_TIM.slice(0, timSesi).map((w, t) => "Tim " + (t + 1) + " · " + papanTim[t].filter(s => s.lulus).length + "/" + ronde.length).join(" · ");
+        rincian.style.display = "";
+      } else rincian.style.display = "none";
       $("areaLangkah").style.display = "";
       $("statusSesi").textContent = "Babak selesai. Ulangi babak ini, atau lanjut ke babak berikutnya.";
     }
@@ -561,11 +721,35 @@ async function nilai(benar) {
   if (!gerakDikurangi()) kisi.style.opacity = "0";
   await jeda(120);
   if (gen !== generasiSesi) { sibuk = false; return; }
-  urutan = kocok(urutan);
+  if (modeSesi === "kelas") urutan = kocok(urutan); else susunUrutan();
   gambarReview();
+  segarkanBarTim();
   kisi.style.opacity = "1";
   sibuk = false;
 }
+
+function pindahTim() {
+  if (sibuk || modeSesi !== "bergilir") return;
+  if (bukaIdx >= 0) { $("statusSesi").textContent = "Nilai dulu kartu yang sedang terbuka sebelum berganti tim."; return; }
+  for (let lompat = 1; lompat <= timSesi; lompat++) {
+    const calon = (timAktif + lompat) % timSesi;
+    if (papanTim[calon] && !papanTim[calon].every(s => s.lulus)) {
+      timAktif = calon;
+      $("areaTimSelesai").style.display = "none";
+      $("areaReview").style.display = "";
+      bukaIdx = -1; terjawab = false;
+      susunUrutan();
+      $("info").textContent = infoTeks();
+      segarkanBarTim();
+      $("statusSesi").textContent = "Papan Tim " + (timAktif + 1) + ". Ketuk satu kartu. Satu kolom tampil, satu tertutup, diacak setiap dibuka, dan posisi kartu diacak lagi sesudah tiap penilaian.";
+      gambarReview();
+      return;
+    }
+  }
+  $("statusSesi").textContent = "Semua tim sudah menuntaskan babak ini.";
+}
+$("btnTimBerikutnya").onclick = pindahTim;
+$("btnTimSelesaiLanjut").onclick = pindahTim;
 
 $("btnUlangiLangkah").onclick = () => { if (!sibuk) mulaiLangkah(); };
 $("btnLanjutLangkah").onclick = () => {
@@ -748,6 +932,24 @@ window.addEventListener("beforeunload", e => {
 });
 try { muatRuang(); gambarRuang(); } catch (e) { ruang = []; }
 segarkanStatusIsi();
+
+function segarkanPemilihMode() {
+  $("wadahTim").style.display = $("pilihMode").value === "kelas" ? "none" : "inline-flex";
+}
+function simpanPilihanMode() {
+  try {
+    localStorage.setItem("modeKartuHafalan", JSON.stringify({ mode: $("pilihMode").value, tim: parseInt($("pilihTim").value, 10) || 2 }));
+  } catch (e) {}
+  segarkanPemilihMode();
+}
+try {
+  const mp = JSON.parse(localStorage.getItem("modeKartuHafalan") || "null");
+  if (mp && ["kelas", "gantian", "bergilir"].includes(mp.mode)) $("pilihMode").value = mp.mode;
+  if (mp && [2, 3, 4].includes(mp.tim)) $("pilihTim").value = String(mp.tim);
+} catch (e) {}
+segarkanPemilihMode();
+$("pilihMode").addEventListener("change", simpanPilihanMode);
+$("pilihTim").addEventListener("change", simpanPilihanMode);
 
 function pasangTema(nama) {
   document.body.classList.remove("tema-zamrud", "tema-biru", "tema-terang");
