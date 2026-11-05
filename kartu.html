@@ -125,7 +125,10 @@
   perangkat ini dengan acak bawaan browser, tanpa API dan tanpa internet.</p>
 
   <div class="kotak" id="kotakIsi">
-    <label for="daftar" style="font-size:13px;font-weight:600">Daftar kartu, format: tulisan = arti</label>
+    <div style="font-size:13px;font-weight:600">Ruang tersimpan di perangkat ini</div>
+    <div id="daftarRuang" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"></div>
+    <div id="ruangKosong" style="font-size:12px;color:var(--keterangan);margin-top:6px">Belum ada ruang tersimpan. Isi daftar di bawah, beri nama, lalu tekan Simpan Ruang.</div>
+    <label for="daftar" style="font-size:13px;font-weight:600;display:block;margin-top:16px">Daftar kartu, format: tulisan = arti</label>
     <textarea id="daftar" dir="ltr">كِتَابٌ = buku
 بَيْتٌ = rumah
 مَدْرَسَةٌ = sekolah
@@ -143,6 +146,13 @@
       <input type="number" id="jumlahKartu" min="2" placeholder="semua" style="width:96px; padding:9px; font-size:16px; border-radius:8px; border:2px solid var(--garis); background:#fff; color:#20302a">
     </div>
     <div style="font-size:12px; color:var(--keterangan); margin-top:4px">Kosongkan untuk memakai semua kartu. Bila daftar lebih banyak dari angka ini, kartu dipilih acak dari daftar setiap sesi dimulai.</div>
+    <div style="margin-top:12px; display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+      <label for="namaRuang" style="font-size:13px;font-weight:600">Nama ruang:</label>
+      <input type="text" id="namaRuang" placeholder="mis. Pertemuan 1, Kosakata 1, Rumus 1" style="flex:1; min-width:180px; padding:9px; font-size:15px; border-radius:8px; border:2px solid var(--garis); background:#fff; color:#20302a">
+      <button class="aksi sekunder" id="btnSimpanRuang">Simpan Ruang</button>
+      <button class="aksi sekunder" id="btnRuangBaru">Ruang Baru</button>
+    </div>
+    <div id="statusRuang" style="font-size:12px; color:var(--keterangan); margin-top:4px">Nama bebas: Pertemuan 1, Kosakata 1, Rumus 1, Rumus 2, terserah guru. Kosongkan nama untuk diisi otomatis "Pertemuan" berikutnya. Ruang yang sedang dibuka akan diperbarui bila disimpan lagi.</div>
     <div class="baris">
       <button class="aksi" id="btnMulai">Mulai Sesi</button>
     </div>
@@ -441,6 +451,92 @@ async function nilai(benar) {
   kisi.style.opacity = "1";
   sibuk = false;
 }
+
+let ruang = [];
+let sedangEdit = null;
+function hitungKartu(teks) {
+  return teks.split("\n").map(s => s.trim()).filter(Boolean).filter(b => {
+    const p = b.split("=");
+    return (p[0] || "").trim() && (p.slice(1).join("=") || "").trim();
+  }).length;
+}
+function muatRuang() {
+  try { const r = JSON.parse(localStorage.getItem("ruangKartuHafalan") || "[]"); ruang = Array.isArray(r) ? r : []; }
+  catch (e) { ruang = []; }
+}
+function tulisRuang() { try { localStorage.setItem("ruangKartuHafalan", JSON.stringify(ruang)); } catch (e) {} }
+function gambarRuang() {
+  const wadah = $("daftarRuang");
+  wadah.innerHTML = "";
+  $("ruangKosong").style.display = ruang.length ? "none" : "";
+  ruang.forEach(r => {
+    const d = document.createElement("div");
+    d.style.cssText = "background:#fff;border:2px solid var(--garis);border-radius:12px;padding:10px";
+    const nm = document.createElement("div");
+    nm.style.cssText = "font-weight:700;font-size:14px;color:#20302a";
+    nm.textContent = r.nama;
+    const meta = document.createElement("div");
+    meta.style.cssText = "font-size:12px;color:var(--keterangan);margin:2px 0 8px";
+    meta.textContent = hitungKartu(r.daftar) + " kartu · " + new Date(r.diubah).toLocaleDateString("id-ID", { day: "numeric", month: "short" });
+    const bar = document.createElement("div");
+    bar.style.cssText = "display:flex;gap:6px";
+    const bBuka = document.createElement("button");
+    bBuka.className = "mini benar"; bBuka.textContent = "Buka";
+    bBuka.onclick = () => bukaRuang(r.id);
+    const bHapus = document.createElement("button");
+    bHapus.className = "mini salah"; bHapus.textContent = "Hapus";
+    bHapus.onclick = () => hapusRuang(r.id);
+    bar.appendChild(bBuka); bar.appendChild(bHapus);
+    d.appendChild(nm); d.appendChild(meta); d.appendChild(bar);
+    wadah.appendChild(d);
+  });
+}
+function bukaRuang(id) {
+  const r = ruang.find(x => x.id === id);
+  if (!r) return;
+  sedangEdit = id;
+  $("daftar").value = r.daftar;
+  $("namaRuang").value = r.nama;
+  $("jumlahKartu").value = r.jumlah || "";
+  $("statusIsi").textContent = "Ruang \"" + r.nama + "\" dibuka: " + hitungKartu(r.daftar) + " kartu. Tekan Mulai Sesi untuk memakai, atau ubah daftarnya lalu Simpan Ruang untuk memperbarui.";
+  $("statusRuang").textContent = "Sedang membuka ruang \"" + r.nama + "\". Menyimpan akan memperbarui ruang ini.";
+}
+function hapusRuang(id) {
+  const r = ruang.find(x => x.id === id);
+  if (!r) return;
+  if (!window.confirm("Hapus ruang \"" + r.nama + "\" dari perangkat ini?")) return;
+  ruang = ruang.filter(x => x.id !== id);
+  if (sedangEdit === id) sedangEdit = null;
+  tulisRuang(); gambarRuang();
+}
+$("btnSimpanRuang").onclick = () => {
+  const daftar = $("daftar").value;
+  if (hitungKartu(daftar) < 2) { $("statusRuang").textContent = "Daftar harus berisi minimal 2 kartu sebelum disimpan."; return; }
+  let nama = $("namaRuang").value.trim();
+  if (!nama) nama = "Pertemuan " + (ruang.length + 1);
+  if (sedangEdit) {
+    const r = ruang.find(x => x.id === sedangEdit);
+    if (r) { r.nama = nama; r.daftar = daftar; r.jumlah = $("jumlahKartu").value; r.diubah = Date.now(); }
+    $("statusRuang").textContent = "Tersimpan, ruang \"" + nama + "\" diperbarui.";
+  } else {
+    const r = { id: "r" + Date.now(), nama, daftar, jumlah: $("jumlahKartu").value, diubah: Date.now() };
+    ruang.push(r);
+    sedangEdit = r.id;
+    $("statusRuang").textContent = "Ruang baru \"" + nama + "\" tersimpan.";
+  }
+  $("namaRuang").value = nama;
+  tulisRuang(); gambarRuang();
+};
+$("btnRuangBaru").onclick = () => {
+  sedangEdit = null;
+  $("namaRuang").value = "";
+  $("daftar").value = "";
+  $("jumlahKartu").value = "";
+  $("statusRuang").textContent = "Ruang baru: ketik daftar kartu dan namanya, lalu tekan Simpan Ruang.";
+  $("daftar").focus();
+};
+muatRuang();
+gambarRuang();
 
 function pasangTema(nama) {
   document.body.classList.remove("tema-zamrud", "tema-biru", "tema-terang");
