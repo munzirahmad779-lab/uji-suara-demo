@@ -101,14 +101,51 @@
     #kisiReview { grid-template-columns: repeat(3, 1fr); }
   }
   @media (min-width: 1000px) {
-    main { max-width: 1120px; }
+    main { max-width: 1240px; padding: 26px 24px 52px; }
+    h1 { font-size: 30px; }
+    p.sub { font-size: 15px; max-width: 880px; }
+    .kotak { padding: 24px 26px; border-radius: 16px; }
+    /* Formulir dua panel: editor kiri, rak ruang kanan */
+    #kotakIsi { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 28px; align-items: start; }
+    #kotakIsi textarea { min-height: 330px; }
+    .panelRuang > div:first-child { margin-top: 0 !important; }
+    .panelRuang #daftarRuang { grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)) !important; max-height: 540px !important; }
+    /* Papan sesi skala layar besar */
+    #kotakSesi { padding: 26px 28px; }
+    #info { font-size: 19px; }
+    #cipTahap { font-size: 13px; padding: 6px 14px; }
+    #timer { font-size: 40px; }
+    #keteranganTimer { font-size: 13px; }
+    #statusSesi { min-height: 44px; font-size: 15.5px; }
+    .kisi { gap: 16px; }
     #kisiBelajar { grid-template-columns: repeat(4, 1fr); }
+    #kisiBelajar .kartu { min-height: 300px; display: flex; flex-direction: column; justify-content: center; padding: 20px 14px; }
+    #kisiBelajar .kolom .isi { font-size: 42px; }
+    #kisiBelajar .kolom .isi.arti { font-size: 25px; }
+    .kartu .a { font-size: 44px; }
+    .kartu .b { font-size: 20px; }
+    .kolom .label { font-size: 12px; }
     #kisiReview { grid-template-columns: repeat(4, 1fr); }
-    .kartu .a { font-size: 34px; }
-    .kolom .isi { font-size: 30px; }
-    #kisiReview .kartu { height: 236px; }
-    #kisiReview .kartu.buka { min-height: 236px; }
-    #statusSesi { min-height: 44px; }
+    #kisiReview .kartu { height: 300px; }
+    #kisiReview .kartu.buka { min-height: 300px; }
+    .kartu.tutup .tanya { font-size: 72px; }
+    .kartu.tutup .nama { font-size: 18px; }
+    .kolom .isi { font-size: 34px; }
+    .kolom .isi.arti { font-size: 23px; }
+    .penutup .tanyaKecil { font-size: 30px; }
+    .slotNilai { height: 56px; }
+    button.aksi { padding: 14px 22px; font-size: 16px; }
+    button.mini { padding: 14px 18px; font-size: 15px; }
+    #areaTuntas .besar { font-size: 38px; }
+    #areaTuntas .ringkas { font-size: 17px; }
+  }
+  @media (min-width: 1600px) {
+    main { max-width: 1400px; }
+    #kisiBelajar .kartu { min-height: 320px; }
+    .kartu .a { font-size: 48px; }
+    #kisiReview .kartu { height: 320px; }
+    #kisiReview .kartu.buka { min-height: 320px; }
+    .kolom .isi { font-size: 36px; }
   }
 </style>
 </head>
@@ -130,6 +167,7 @@
   tanpa API dan tanpa internet.</p>
 
   <div class="kotak" id="kotakIsi">
+    <div class="panelEditor">
     <label for="daftar" style="font-size:13px;font-weight:600;display:block">Daftar kartu, format: tulisan = arti (untuk rumus yang memuat tanda =, pakai pemisah | antara soal dan jawaban)</label>
     <textarea id="daftar" dir="ltr">كِتَابٌ = buku
 بَيْتٌ = rumah
@@ -165,7 +203,8 @@
       <button class="aksi" id="btnMulai">Mulai Sesi</button>
     </div>
     <div id="statusIsi" style="font-size:14px;margin-top:12px;color:#14343a">12 kartu contoh terisi. Tekan Mulai Sesi, atau ganti dulu daftarnya dengan kosakata dars apa pun.</div>
-
+    </div>
+    <div class="panelRuang">
     <div style="font-size:13px;font-weight:600;margin-top:20px">Ruang tersimpan di perangkat ini</div>
     <div style="font-size:12px;color:var(--keterangan);margin-top:4px">Ruang hanya tersimpan di perangkat dan peramban ini: siapa pun yang memakai perangkat ini dapat membukanya, dan ruang hilang bila data situs dibersihkan. Simpan cadangan teksnya untuk berjaga-jaga.</div>
     <div id="daftarRuang" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:8px;max-height:300px;overflow:auto"></div>
@@ -175,6 +214,7 @@
       <button class="aksi sekunder" id="btnPulihkanCadangan">Pulihkan dari Cadangan</button>
     </div>
     <div id="statusCadangan" style="font-size:12px; color:var(--keterangan); margin-top:4px"></div>
+    </div>
   </div>
 
   <div class="kotak" id="kotakSesi" style="display:none">
