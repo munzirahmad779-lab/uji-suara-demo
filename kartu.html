@@ -138,6 +138,11 @@
 دَفْتَرٌ = buku tulis
 مَكْتَبٌ = meja
 مَسْجِدٌ = masjid</textarea>
+    <div style="margin-top:12px; display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+      <label for="jumlahKartu" style="font-size:13px;font-weight:600">Jumlah kartu yang dipakai:</label>
+      <input type="number" id="jumlahKartu" min="2" placeholder="semua" style="width:96px; padding:9px; font-size:16px; border-radius:8px; border:2px solid var(--garis); background:#fff; color:#20302a">
+    </div>
+    <div style="font-size:12px; color:var(--keterangan); margin-top:4px">Kosongkan untuk memakai semua kartu. Bila daftar lebih banyak dari angka ini, kartu dipilih acak dari daftar setiap sesi dimulai.</div>
     <div class="baris">
       <button class="aksi" id="btnMulai">Mulai Sesi</button>
     </div>
@@ -203,6 +208,7 @@ let baruBuka = false;  // animasi masuk hanya pada render sesudah membuka
 let sibuk = false;     // kunci masukan selama pengakuan penilaian
 let tonggak = { setengah: false, sisaDua: false };
 let sisaBelajar = 180, jamBelajar = null;
+let catatanPilih = "";
 
 function kumpulanSampaiSet() { return kartu.slice(0, Math.min(kartu.length, (setKe + 1) * setUkuran)); }
 function totalSet() { return Math.ceil(kartu.length / setUkuran); }
@@ -219,6 +225,13 @@ function mulaiSesi() {
     return { a: (p[0] || "").trim(), b: (p.slice(1).join("=") || "").trim(), benar: 0, salah: 0, lulus: false };
   }).filter(c => c.a && c.b);
   if (kartu.length < 2) { $("statusIsi").textContent = "Isi dulu minimal 2 kartu dengan format tulisan = arti."; return; }
+  catatanPilih = "";
+  const minta = parseInt(($("jumlahKartu").value || "").trim(), 10);
+  if (Number.isFinite(minta) && minta >= 2 && minta < kartu.length) {
+    const totalDaftar = kartu.length;
+    kartu = kocok(kartu).slice(0, minta);
+    catatanPilih = "Dipakai " + kartu.length + " kartu yang dipilih acak dari " + totalDaftar + " kartu di daftar.";
+  }
   setKe = 0;
   document.body.classList.add("sesiAktif");
   $("kotakIsi").style.display = "none";
@@ -248,7 +261,7 @@ function mulaiBelajar() {
   $("keteranganTimer").textContent = "waktu habis, ujian mulai sendiri";
   $("batangLuar").style.display = "";
   $("batangWaktu").style.width = "100%";
-  $("statusSesi").textContent = "Tahap hafal: perhatikan " + setIni.length + " kartu ini. Sesudah siap, tutup dengan tombol Uji Sekarang.";
+  $("statusSesi").textContent = "Tahap hafal: perhatikan " + setIni.length + " kartu ini. Sesudah siap, tutup dengan tombol Uji Sekarang." + (setKe === 0 && catatanPilih ? " " + catatanPilih : "");
   jamBelajar = setInterval(() => {
     if (sisaBelajar > 0) {
       sisaBelajar--;
