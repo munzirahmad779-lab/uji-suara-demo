@@ -18,23 +18,23 @@
   body.tema-biru { --teal: #12275A; --teal2: #1B3A7A; --teal3: #2B55A0; --krem: #F8F4EA;
     --emas: #FFB84D; --emas-gelap: #D98E1F; --gelap: #16233F; --garis: #8AA0C8;
     --sekunder: #E8EDF7; --keterangan: #55648A; --batang: #DCE4F2; --subteks: #E9EDF9; }
-  body.tema-terang { --teal: #1E6B74; --teal2: #2A8C96; --teal3: #45ACAC; --krem: #FFFDF4;
+  body.tema-terang { --teal: #1E6B74; --teal2: #227C88; --teal3: #1F7A84; --krem: #FFFDF4;
     --emas: #FFC93F; --emas-gelap: #D9A41F; --gelap: #123A3E; --garis: #7FB5AE;
-    --sekunder: #E6F4F1; --keterangan: #49716C; --batang: #D8EDE9; --subteks: #F2FAF7; }
+    --sekunder: #E6F4F1; --keterangan: #49716C; --batang: #D8EDE9; --subteks: #FFFFFF; --teksterang: #FFFFFF; }
   body { font-family: system-ui, sans-serif; margin: 0; color: var(--teksterang);
     background: linear-gradient(160deg, var(--teal), var(--teal2) 55%, var(--teal3)) fixed; }
   .barisTema { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 4px 0 10px; }
   .barisTema .labelTema { font-size: 13px; font-weight: 700; }
-  .btnTema { display: inline-flex; align-items: center; gap: 7px; padding: 8px 13px; font-size: 13px; font-weight: 700;
+  .btnTema { display: inline-flex; align-items: center; gap: 7px; padding: 12px 15px; font-size: 13px; font-weight: 700;
     border-radius: 999px; border: 2px solid rgba(255,255,255,.45); background: rgba(0,0,0,.22); color: var(--teksterang); cursor: pointer; }
   .btnTema .contoh { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--emas); display: inline-block; }
   .btnTema.aktif { background: var(--emas); color: #20302a; border-color: var(--emas); }
   main { max-width: 680px; margin: 0 auto; padding: 20px 16px 44px; }
   h1 { font-size: 22px; margin: 8px 0 4px; }
   p.sub { color: var(--subteks); font-size: 14px; line-height: 1.55; }
-  body.sesiAktif h1, body.sesiAktif p.sub { display: none; }
+  body.sesiAktif h1, body.sesiAktif p.sub, body.sesiAktif .barisTema { display: none; }
   .kotak { background: var(--krem); color: var(--gelap); border-radius: 14px; padding: 16px; margin-top: 14px; }
-  textarea { width: 100%; box-sizing: border-box; min-height: 200px; padding: 10px; font-size: 16px; line-height: 1.7;
+  textarea { width: 100%; box-sizing: border-box; min-height: 200px; padding: 10px; font-size: 18px; line-height: 1.7;
     border: 2px solid var(--garis); border-radius: 10px; text-align: left;
     font-family: "Amiri", "Traditional Arabic", "Scheherazade New", system-ui, serif; }
   button.aksi { padding: 12px 16px; font-size: 15px; font-weight: 700; border: 0; border-radius: 10px; background: var(--teal); color: #fff; cursor: pointer; }
@@ -46,12 +46,15 @@
   #keteranganTimer { font-size: 12px; color: var(--keterangan); }
   .batangLuar { height: 6px; background: var(--batang); border-radius: 3px; margin-top: 6px; overflow: hidden; }
   #batangWaktu { height: 100%; width: 100%; background: var(--emas-gelap); }
-  #statusSesi { font-size: 14px; margin-top: 12px; min-height: 20px; color: var(--teal); line-height: 1.45; }
+  #statusSesi { font-size: 14px; margin-top: 12px; min-height: 64px; color: var(--teal); line-height: 1.45; }
+  #daftarRuang button.mini.benar { background: var(--sekunder); color: var(--teal); border: 2px solid var(--teal); }
+  .barisAkhiri { position: sticky; bottom: 10px; background: var(--krem); padding: 10px 0 2px; z-index: 3; }
   .kisi { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
   .kartu { border: 2px solid var(--teal); border-radius: 12px; padding: 10px; text-align: center; background: var(--krem); position: relative; }
   .kartu .a { font-size: 30px; font-family: "Amiri", "Traditional Arabic", "Scheherazade New", serif; line-height: 1.7; }
   .kartu .b { font-size: 16px; color: var(--teal); font-weight: 700; margin-top: 4px; }
   #kisiReview .kartu { height: 224px; display: flex; flex-direction: column; box-sizing: border-box; }
+  #kisiReview .kartu.buka { height: auto; min-height: 224px; }
   .kartu.tutup { background-color: var(--teal); color: var(--emas); cursor: pointer; align-items: center; justify-content: center;
     background-image: radial-gradient(rgba(255,217,138,.16) 1.5px, transparent 1.7px); background-size: 16px 16px; }
   .kartu.tutup .tanya { font-size: 46px; font-weight: 800; line-height: 1; }
@@ -104,6 +107,8 @@
     .kartu .a { font-size: 34px; }
     .kolom .isi { font-size: 30px; }
     #kisiReview .kartu { height: 236px; }
+    #kisiReview .kartu.buka { min-height: 236px; }
+    #statusSesi { min-height: 44px; }
   }
 </style>
 </head>
@@ -116,19 +121,16 @@
     <button class="btnTema" data-tema="terang"><span class="contoh" style="background:#2A8C96"></span>Teal Terang</button>
   </div>
   <h1>Kartu Hafalan</h1>
-  <p class="sub">Isi daftar kosakata di bawah (satu baris satu kartu: tulisan = arti), berapa pun
-  jumlahnya. Sistem membaginya sendiri menjadi set 4 kartu. Tiap set dihafalkan dulu, lalu
-  diuji dalam kumpulan yang tumbuh: 4, lalu 8, lalu 12, dan seterusnya. Pada tahap uji, tiap
-  kartu punya dua kolom, kosakata dan terjemahannya. Satu kolom tampil dan satu tertutup,
-  dan mana yang tertutup diacak ulang setiap kartu dibuka. Kartu lulus sesudah dua kali benar
-  dalam campuran; sekali salah, hitungan benarnya kembali ke nol. Semua acakan berjalan di
-  perangkat ini dengan acak bawaan browser, tanpa API dan tanpa internet.</p>
+  <p class="sub">Isi daftar di bawah (satu baris satu kartu: tulisan = arti), berapa pun jumlahnya,
+  maksimal 100 kartu. Sistem membaginya menjadi set 4 kartu: tiap set dihafalkan dulu selama
+  3 menit, lalu diuji dalam kumpulan yang tumbuh, semua kartu set sebelumnya ikut terbawa ke
+  ujian berikutnya. Pada tahap uji tiap kartu punya dua kolom; satu kolom tampil, satu tertutup,
+  dan yang tertutup diacak ulang setiap kartu dibuka. Kartu lulus sesudah dua kali benar dalam
+  campuran; sekali salah, hitungan benarnya kembali ke nol. Semua berjalan di perangkat ini,
+  tanpa API dan tanpa internet.</p>
 
   <div class="kotak" id="kotakIsi">
-    <div style="font-size:13px;font-weight:600">Ruang tersimpan di perangkat ini</div>
-    <div id="daftarRuang" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"></div>
-    <div id="ruangKosong" style="font-size:12px;color:var(--keterangan);margin-top:6px">Belum ada ruang tersimpan. Isi daftar di bawah, beri nama, lalu tekan Simpan Ruang.</div>
-    <label for="daftar" style="font-size:13px;font-weight:600;display:block;margin-top:16px">Daftar kartu, format: tulisan = arti</label>
+    <label for="daftar" style="font-size:13px;font-weight:600;display:block">Daftar kartu, format: tulisan = arti (untuk rumus yang memuat tanda =, pakai pemisah | antara soal dan jawaban)</label>
     <textarea id="daftar" dir="ltr">كِتَابٌ = buku
 بَيْتٌ = rumah
 مَدْرَسَةٌ = sekolah
@@ -143,20 +145,36 @@
 مَسْجِدٌ = masjid</textarea>
     <div style="margin-top:12px; display:flex; align-items:center; gap:8px; flex-wrap:wrap">
       <label for="jumlahKartu" style="font-size:13px;font-weight:600">Jumlah kartu yang dipakai:</label>
-      <input type="number" id="jumlahKartu" min="2" placeholder="semua" style="width:96px; padding:9px; font-size:16px; border-radius:8px; border:2px solid var(--garis); background:#fff; color:#20302a">
+      <input type="number" id="jumlahKartu" min="2" placeholder="mis. 10" style="width:96px; padding:9px; font-size:16px; border-radius:8px; border:2px solid var(--garis); background:#fff; color:#20302a">
     </div>
     <div style="font-size:12px; color:var(--keterangan); margin-top:4px">Kosongkan untuk memakai semua kartu. Bila daftar lebih banyak dari angka ini, kartu dipilih acak dari daftar setiap sesi dimulai.</div>
     <div style="margin-top:12px; display:flex; align-items:center; gap:8px; flex-wrap:wrap">
       <label for="namaRuang" style="font-size:13px;font-weight:600">Nama ruang:</label>
-      <input type="text" id="namaRuang" placeholder="mis. Pertemuan 1, Kosakata 1, Rumus 1" style="flex:1; min-width:180px; padding:9px; font-size:15px; border-radius:8px; border:2px solid var(--garis); background:#fff; color:#20302a">
+      <input type="text" id="namaRuang" maxlength="60" placeholder="mis. Pertemuan 1, Kosakata 1, Rumus 1" style="flex:1; min-width:180px; padding:9px; font-size:15px; border-radius:8px; border:2px solid var(--garis); background:#fff; color:#20302a">
+      <label for="jenisLabel" style="font-size:13px;font-weight:600">Label kolom:</label>
+      <select id="jenisLabel" style="padding:9px; font-size:15px; border-radius:8px; border:2px solid var(--garis); background:#fff; color:#20302a">
+        <option value="kosakata">Kosakata / Terjemahan</option>
+        <option value="rumus">Rumus / Jawaban</option>
+        <option value="umum">Tulisan / Arti</option>
+      </select>
       <button class="aksi sekunder" id="btnSimpanRuang">Simpan Ruang</button>
       <button class="aksi sekunder" id="btnRuangBaru">Ruang Baru</button>
     </div>
-    <div id="statusRuang" style="font-size:12px; color:var(--keterangan); margin-top:4px">Nama bebas: Pertemuan 1, Kosakata 1, Rumus 1, Rumus 2, terserah guru. Kosongkan nama untuk diisi otomatis "Pertemuan" berikutnya. Ruang yang sedang dibuka akan diperbarui bila disimpan lagi.</div>
+    <div id="statusRuang" style="font-size:12px; color:var(--keterangan); margin-top:4px">Nama bebas: Pertemuan 1, Kosakata 1, Rumus 1, Rumus 2, terserah guru. Kosongkan nama untuk diisi otomatis "Pertemuan" berikutnya. Ruang yang sedang dibuka akan diperbarui bila disimpan lagi; mengganti nama ruang yang sudah ada bisa juga lewat tombol Nama pada kartunya.</div>
     <div class="baris">
       <button class="aksi" id="btnMulai">Mulai Sesi</button>
     </div>
     <div id="statusIsi" style="font-size:14px;margin-top:12px;color:#14343a">12 kartu contoh terisi. Tekan Mulai Sesi, atau ganti dulu daftarnya dengan kosakata dars apa pun.</div>
+
+    <div style="font-size:13px;font-weight:600;margin-top:20px">Ruang tersimpan di perangkat ini</div>
+    <div style="font-size:12px;color:var(--keterangan);margin-top:4px">Ruang hanya tersimpan di perangkat dan peramban ini: siapa pun yang memakai perangkat ini dapat membukanya, dan ruang hilang bila data situs dibersihkan. Simpan cadangan teksnya untuk berjaga-jaga.</div>
+    <div id="daftarRuang" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:8px;max-height:300px;overflow:auto"></div>
+    <div id="ruangKosong" style="font-size:12px;color:var(--keterangan);margin-top:6px">Belum ada ruang tersimpan. Isi daftar di atas, beri nama, lalu tekan Simpan Ruang.</div>
+    <div class="baris">
+      <button class="aksi sekunder" id="btnSalinCadangan">Salin Cadangan Ruang</button>
+      <button class="aksi sekunder" id="btnPulihkanCadangan">Pulihkan dari Cadangan</button>
+    </div>
+    <div id="statusCadangan" style="font-size:12px; color:var(--keterangan); margin-top:4px"></div>
   </div>
 
   <div class="kotak" id="kotakSesi" style="display:none">
@@ -193,7 +211,7 @@
       </div>
     </div>
 
-    <div class="baris">
+    <div class="baris barisAkhiri">
       <button class="aksi sekunder" id="btnUlang">Akhiri dan Ubah Daftar</button>
     </div>
   </div>
@@ -218,7 +236,38 @@ let baruBuka = false;  // animasi masuk hanya pada render sesudah membuka
 let sibuk = false;     // kunci masukan selama pengakuan penilaian
 let tonggak = { setengah: false, sisaDua: false };
 let sisaBelajar = 180, jamBelajar = null;
-let catatanPilih = "";
+let catatanMulai = "";
+let generasiSesi = 0;
+let targetWaktu = 0;
+let editorKotor = false;
+const MAKS_KARTU = 100;
+const jedaBaca = ms => new Promise(r => setTimeout(r, ms));
+const PASANGAN_LABEL = { kosakata: ["Kosakata", "Terjemahan"], rumus: ["Rumus", "Jawaban"], umum: ["Tulisan", "Arti"] };
+function labelSisi(sisi) { const p = PASANGAN_LABEL[$("jenisLabel").value] || PASANGAN_LABEL.kosakata; return sisi === "a" ? p[0] : p[1]; }
+function pisahBaris(b) {
+  const t = b.trim();
+  if (!t) return null;
+  let p;
+  if (t.includes("|")) { const i = t.indexOf("|"); p = [t.slice(0, i), t.slice(i + 1)]; }
+  else { const i = t.indexOf("="); if (i < 0) return null; p = [t.slice(0, i), t.slice(i + 1)]; }
+  const a = p[0].trim(), bb = p[1].trim();
+  return a && bb ? { a, b: bb } : null;
+}
+function parseDaftar(teks) {
+  const hasil = []; let dibuang = 0; let duplikat = 0;
+  const terlihat = new Set();
+  String(teks || "").split("\n").forEach(b => {
+    if (!b.trim()) return;
+    const c = pisahBaris(b);
+    if (!c) { dibuang++; return; }
+    const kunci = c.a + " " + c.b;
+    if (terlihat.has(kunci)) duplikat++;
+    terlihat.add(kunci);
+    hasil.push({ a: c.a, b: c.b, benar: 0, salah: 0, lulus: false });
+  });
+  return { hasil, dibuang, duplikat };
+}
+function kunciKartu(c) { return c.a + " " + c.b; }
 
 function kumpulanSampaiSet() { return kartu.slice(0, Math.min(kartu.length, (setKe + 1) * setUkuran)); }
 function totalSet() { return Math.ceil(kartu.length / setUkuran); }
@@ -229,19 +278,39 @@ function infoTeks() {
 }
 
 function mulaiSesi() {
-  const baris = $("daftar").value.split("\n").map(s => s.trim()).filter(Boolean);
-  kartu = baris.map(b => {
-    const p = b.split("=");
-    return { a: (p[0] || "").trim(), b: (p.slice(1).join("=") || "").trim(), benar: 0, salah: 0, lulus: false };
-  }).filter(c => c.a && c.b);
-  if (kartu.length < 2) { $("statusIsi").textContent = "Isi dulu minimal 2 kartu dengan format tulisan = arti."; return; }
-  catatanPilih = "";
-  const minta = parseInt(($("jumlahKartu").value || "").trim(), 10);
+  clearInterval(jamBelajar);
+  const { hasil, dibuang, duplikat } = parseDaftar($("daftar").value);
+  if (hasil.length < 2) { $("statusIsi").textContent = "Isi dulu minimal 2 kartu dengan format tulisan = arti."; return; }
+  const catatan = [];
+  if (dibuang > 0) catatan.push(dibuang + " baris dilewati karena formatnya bukan tulisan = arti.");
+  if (duplikat > 0) catatan.push("Ada " + duplikat + " kartu duplikat persis di daftar.");
+  kartu = hasil;
+  const mintaTeks = ($("jumlahKartu").value || "").trim();
+  const minta = parseInt(mintaTeks, 10);
   if (Number.isFinite(minta) && minta >= 2 && minta < kartu.length) {
     const totalDaftar = kartu.length;
     kartu = kocok(kartu).slice(0, minta);
-    catatanPilih = "Dipakai " + kartu.length + " kartu yang dipilih acak dari " + totalDaftar + " kartu di daftar.";
+    catatan.push("Dipakai " + kartu.length + " kartu yang dipilih acak dari " + totalDaftar + " kartu di daftar.");
+  } else if (mintaTeks !== "") {
+    catatan.push("Angka jumlah tidak dipakai (harus antara 2 dan " + (kartu.length - 1) + "); semua kartu dipakai.");
   }
+  if (kartu.length > MAKS_KARTU) {
+    $("statusIsi").textContent = "Daftar ini memakai " + kartu.length + " kartu; batas satu sesi adalah " + MAKS_KARTU + " kartu. Kurangi daftarnya atau pakai kolom jumlah untuk memilih sebagian.";
+    kartu = [];
+    return;
+  }
+  const r = sedangEdit ? ruang.find(x => x.id === sedangEdit) : null;
+  if (r && r.terakhir && Array.isArray(r.terakhir.pool) && r.terakhir.pool.length) {
+    const kunciPool = new Set(r.terakhir.pool);
+    const dulu = kartu.filter(c => kunciPool.has(kunciKartu(c)));
+    const baru = kartu.filter(c => !kunciPool.has(kunciKartu(c)));
+    if (dulu.length && baru.length) {
+      kartu = dulu.concat(baru);
+      catatan.push("Kumpulan pertemuan lalu (" + dulu.length + " kartu) dibuka lebih dulu sebelum kartu baru.");
+    }
+  }
+  catatanMulai = catatan.join(" ");
+  generasiSesi++;
   setKe = 0;
   document.body.classList.add("sesiAktif");
   $("kotakIsi").style.display = "none";
@@ -267,18 +336,19 @@ function mulaiBelajar() {
     $("kisiBelajar").appendChild(d);
   });
   sisaBelajar = 180;
+  targetWaktu = Date.now() + 180000;
   $("timer").textContent = "03:00";
   $("keteranganTimer").textContent = "waktu habis, ujian mulai sendiri";
   $("batangLuar").style.display = "";
   $("batangWaktu").style.width = "100%";
-  $("statusSesi").textContent = "Tahap hafal: perhatikan " + setIni.length + " kartu ini. Sesudah siap, tutup dengan tombol Uji Sekarang." + (setKe === 0 && catatanPilih ? " " + catatanPilih : "");
+  $("statusSesi").textContent = "Tahap hafal: perhatikan " + setIni.length + " kartu ini. Sesudah siap, akhiri tahap hafal dengan tombol Uji Sekarang." + (setKe === 0 && catatanMulai ? " " + catatanMulai : "");
   jamBelajar = setInterval(() => {
-    if (sisaBelajar > 0) {
-      sisaBelajar--;
-      $("timer").textContent = String(Math.floor(sisaBelajar / 60)).padStart(2, "0") + ":" + String(sisaBelajar % 60).padStart(2, "0");
-      $("batangWaktu").style.width = (sisaBelajar / 180 * 100) + "%";
-    } else { clearInterval(jamBelajar); mulaiReview(); }
-  }, 1000);
+    const sisa = Math.max(0, Math.ceil((targetWaktu - Date.now()) / 1000));
+    sisaBelajar = sisa;
+    $("timer").textContent = String(Math.floor(sisa / 60)).padStart(2, "0") + ":" + String(sisa % 60).padStart(2, "0");
+    $("batangWaktu").style.width = (sisa / 180 * 100) + "%";
+    if (sisa <= 0) { clearInterval(jamBelajar); mulaiReview(); }
+  }, 250);
 }
 
 function kolomBelajar(c, sisi) {
@@ -286,11 +356,11 @@ function kolomBelajar(c, sisi) {
   d.className = "kolom";
   const label = document.createElement("div");
   label.className = "label";
-  label.textContent = sisi === "a" ? "Kosakata" : "Terjemahan";
+  label.textContent = labelSisi(sisi);
   d.appendChild(label);
   const isi = document.createElement("div");
   if (sisi === "a") { isi.className = "isi"; isi.textContent = c.a; if (arab(c.a)) isi.dir = "rtl"; }
-  else { isi.className = "isi arti"; isi.textContent = c.b; }
+  else { isi.className = "isi arti"; isi.textContent = c.b; if (arab(c.b)) isi.dir = "rtl"; }
   d.appendChild(isi);
   return d;
 }
@@ -318,7 +388,7 @@ function kolomKartu(c, sisi) {
   d.className = "kolom";
   const label = document.createElement("div");
   label.className = "label";
-  label.textContent = sisi === "a" ? "Kosakata" : "Terjemahan";
+  label.textContent = labelSisi(sisi);
   d.appendChild(label);
   const tampil = (sisi === sisiTampil) || terjawab;
   if (tampil) {
@@ -388,9 +458,10 @@ function gambarReview() {
 
 function bukaKartu(i) {
   if (sibuk) return;
+  if (terjawab) { $("statusSesi").textContent = "Nilai dulu kartu yang sedang terbuka sebelum membuka kartu lain."; return; }
   bukaIdx = i; terjawab = false; baruBuka = true;
   sisiTampil = Math.random() < 0.5 ? "a" : "b";
-  $("statusSesi").textContent = "Kartu dibuka: kolom " + (sisiTampil === "a" ? "kosakata" : "terjemahan") + " yang tampil. Jawab kolom tertutupnya dari ingatan.";
+  $("statusSesi").textContent = "Kartu dibuka: kolom " + labelSisi(sisiTampil).toLowerCase() + " yang tampil. Jawab kolom tertutupnya dari ingatan.";
   gambarReview();
 }
 
@@ -403,6 +474,7 @@ function periksa() {
 
 async function nilai(benar) {
   if (bukaIdx < 0 || !terjawab || sibuk) return;
+  const gen = generasiSesi;
   sibuk = true;
   const c = kartu[bukaIdx];
   const el = $("kartuTerbuka");
@@ -410,7 +482,7 @@ async function nilai(benar) {
   let pesan;
   if (benar) {
     c.benar++;
-    if (c.benar >= 2) { c.lulus = true; pesan = "Benar lagi. Kartu itu lulus dari kumpulan."; }
+    if (c.benar >= 2) { c.lulus = true; pesan = "Benar lagi. Kartu itu lulus dan tetap tampil sebagai LULUS di kumpulan ini."; }
     else pesan = "Benar. Kartu itu ditandai satu titik; sekali benar lagi dalam campuran, ia lulus.";
   } else {
     c.benar = 0; c.salah++;
@@ -422,6 +494,7 @@ async function nilai(benar) {
   if (!tonggak.sisaDua && k.length - jmlLulus === 2) { tonggak.sisaDua = true; pesan += " Tinggal dua kartu lagi."; }
   $("statusSesi").textContent = pesan;
   await jeda(250);
+  if (gen !== generasiSesi) { sibuk = false; return; }
   bukaIdx = -1; terjawab = false;
   if (k.every(x => x.lulus)) {
     gambarReview();
@@ -429,14 +502,20 @@ async function nilai(benar) {
     if ((setKe + 1) * setUkuran >= kartu.length) {
       $("areaReview").style.display = "none";
       $("cipTahap").textContent = "SELESAI";
-      $("ringkasTuntas").textContent = "Seluruh " + kartu.length + " kartu lulus uji campuran dalam " + totalSet() + " set. Besok, kumpulan ini yang dibuka lebih dulu sebelum kartu baru.";
+      const seringSalah = kartu.filter(x => x.salah > 0).sort((p, q) => q.salah - p.salah).slice(0, 3);
+      $("ringkasTuntas").textContent = "Seluruh " + kartu.length + " kartu lulus uji campuran dalam " + totalSet() + " set."
+        + (seringSalah.length ? " Paling sering salah: " + seringSalah.map(x => x.a + " (" + x.salah + "x)").join(", ") + "." : " Tidak ada kartu yang pernah salah.")
+        + (sedangEdit ? " Kumpulan ini tersimpan di ruangnya dan akan dibuka lebih dulu pada sesi berikutnya." : " Simpan daftar ini sebagai ruang agar kumpulannya dibuka lebih dulu pada sesi berikutnya.");
       $("areaTuntas").style.display = "";
       $("statusSesi").textContent = "Sesi tuntas. Kerja bagus.";
+      simpanTerakhir();
       sibuk = false;
     } else {
       $("statusSesi").textContent = "Kumpulan " + k.length + " kartu tuntas semua. Lanjut ke set berikutnya; kumpulan akan tumbuh.";
-      await jeda(700);
+      await jedaBaca(1200);
+      if (gen !== generasiSesi) { sibuk = false; return; }
       setKe++;
+      simpanTerakhir();
       sibuk = false;
       mulaiBelajar();
     }
@@ -455,16 +534,36 @@ async function nilai(benar) {
 let ruang = [];
 let sedangEdit = null;
 function hitungKartu(teks) {
-  return teks.split("\n").map(s => s.trim()).filter(Boolean).filter(b => {
-    const p = b.split("=");
-    return (p[0] || "").trim() && (p.slice(1).join("=") || "").trim();
-  }).length;
+  if (typeof teks !== "string") return 0;
+  return parseDaftar(teks).hasil.length;
+}
+function sanitasiRuang() {
+  ruang = ruang.filter(x => x && typeof x === "object" && typeof x.daftar === "string");
+  const idTerpakai = new Set();
+  ruang.forEach((x, i) => {
+    if (typeof x.nama !== "string" || !x.nama.trim()) x.nama = "Ruang " + (i + 1);
+    if (typeof x.diubah !== "number" || !Number.isFinite(x.diubah)) x.diubah = Date.now();
+    if (typeof x.jumlah !== "string") x.jumlah = x.jumlah == null ? "" : String(x.jumlah);
+    if (typeof x.label !== "string" || !PASANGAN_LABEL[x.label]) x.label = "kosakata";
+    if (typeof x.id !== "string" || !x.id || idTerpakai.has(x.id)) x.id = "r" + Date.now() + "-" + i;
+    idTerpakai.add(x.id);
+    if (x.terakhir && !Array.isArray(x.terakhir.pool)) delete x.terakhir;
+  });
 }
 function muatRuang() {
   try { const r = JSON.parse(localStorage.getItem("ruangKartuHafalan") || "[]"); ruang = Array.isArray(r) ? r : []; }
   catch (e) { ruang = []; }
+  sanitasiRuang();
 }
-function tulisRuang() { try { localStorage.setItem("ruangKartuHafalan", JSON.stringify(ruang)); } catch (e) {} }
+function tulisRuang() { try { localStorage.setItem("ruangKartuHafalan", JSON.stringify(ruang)); return true; } catch (e) { return false; } }
+function simpanTerakhir() {
+  if (!sedangEdit) return;
+  const r = ruang.find(x => x.id === sedangEdit);
+  if (!r) return;
+  r.terakhir = { pool: kartu.map(c => kunciKartu(c)), tanggal: Date.now() };
+  tulisRuang();
+  gambarRuang();
+}
 function gambarRuang() {
   const wadah = $("daftarRuang");
   wadah.innerHTML = "";
@@ -473,20 +572,25 @@ function gambarRuang() {
     const d = document.createElement("div");
     d.style.cssText = "background:#fff;border:2px solid var(--garis);border-radius:12px;padding:10px";
     const nm = document.createElement("div");
-    nm.style.cssText = "font-weight:700;font-size:14px;color:#20302a";
+    nm.style.cssText = "font-weight:700;font-size:14px;color:#20302a;overflow-wrap:anywhere";
     nm.textContent = r.nama;
     const meta = document.createElement("div");
     meta.style.cssText = "font-size:12px;color:var(--keterangan);margin:2px 0 8px";
-    meta.textContent = hitungKartu(r.daftar) + " kartu · " + new Date(r.diubah).toLocaleDateString("id-ID", { day: "numeric", month: "short" });
+    meta.textContent = hitungKartu(r.daftar) + " kartu · " + new Date(r.diubah).toLocaleDateString("id-ID", { day: "numeric", month: "short" })
+      + (r.terakhir ? " · main terakhir " + new Date(r.terakhir.tanggal).toLocaleDateString("id-ID", { day: "numeric", month: "short" }) : "");
     const bar = document.createElement("div");
-    bar.style.cssText = "display:flex;gap:6px";
+    bar.style.cssText = "display:flex;gap:8px;flex-wrap:wrap";
     const bBuka = document.createElement("button");
     bBuka.className = "mini benar"; bBuka.textContent = "Buka";
     bBuka.onclick = () => bukaRuang(r.id);
+    const bNama = document.createElement("button");
+    bNama.className = "mini salah"; bNama.textContent = "Nama";
+    bNama.onclick = () => gantiNamaRuang(r.id);
     const bHapus = document.createElement("button");
     bHapus.className = "mini salah"; bHapus.textContent = "Hapus";
+    bHapus.style.color = "#b03a2a"; bHapus.style.borderColor = "#b03a2a";
     bHapus.onclick = () => hapusRuang(r.id);
-    bar.appendChild(bBuka); bar.appendChild(bHapus);
+    bar.appendChild(bBuka); bar.appendChild(bNama); bar.appendChild(bHapus);
     d.appendChild(nm); d.appendChild(meta); d.appendChild(bar);
     wadah.appendChild(d);
   });
@@ -495,48 +599,121 @@ function bukaRuang(id) {
   const r = ruang.find(x => x.id === id);
   if (!r) return;
   sedangEdit = id;
+  editorKotor = false;
   $("daftar").value = r.daftar;
   $("namaRuang").value = r.nama;
   $("jumlahKartu").value = r.jumlah || "";
+  $("jenisLabel").value = r.label || "kosakata";
   $("statusIsi").textContent = "Ruang \"" + r.nama + "\" dibuka: " + hitungKartu(r.daftar) + " kartu. Tekan Mulai Sesi untuk memakai, atau ubah daftarnya lalu Simpan Ruang untuk memperbarui.";
   $("statusRuang").textContent = "Sedang membuka ruang \"" + r.nama + "\". Menyimpan akan memperbarui ruang ini.";
+}
+function gantiNamaRuang(id) {
+  const r = ruang.find(x => x.id === id);
+  if (!r) return;
+  const baru = window.prompt("Nama baru untuk ruang ini:", r.nama);
+  if (baru === null) return;
+  const nama = baru.trim();
+  if (!nama) { $("statusRuang").textContent = "Nama tidak boleh kosong."; return; }
+  if (ruang.some(x => x.id !== id && x.nama === nama)) { $("statusRuang").textContent = "Nama \"" + nama + "\" sudah dipakai ruang lain."; return; }
+  r.nama = nama;
+  r.diubah = Date.now();
+  if (sedangEdit === id) $("namaRuang").value = nama;
+  const ok = tulisRuang();
+  gambarRuang();
+  $("statusRuang").textContent = ok ? "Nama ruang diganti menjadi \"" + nama + "\"." : "Nama diganti di layar, tetapi GAGAL tersimpan di perangkat (penyimpanan penuh atau mode privat).";
 }
 function hapusRuang(id) {
   const r = ruang.find(x => x.id === id);
   if (!r) return;
-  if (!window.confirm("Hapus ruang \"" + r.nama + "\" dari perangkat ini?")) return;
+  if (!window.confirm("Hapus ruang \"" + r.nama + "\" (" + hitungKartu(r.daftar) + " kartu) dari perangkat ini? Hapus ini permanen dan tidak bisa dikembalikan.")) return;
   ruang = ruang.filter(x => x.id !== id);
   if (sedangEdit === id) sedangEdit = null;
-  tulisRuang(); gambarRuang();
+  const ok = tulisRuang();
+  gambarRuang();
+  if (!ok) $("statusRuang").textContent = "Ruang terhapus di layar, tetapi penghapusan GAGAL tersimpan di perangkat.";
 }
 $("btnSimpanRuang").onclick = () => {
   const daftar = $("daftar").value;
-  if (hitungKartu(daftar) < 2) { $("statusRuang").textContent = "Daftar harus berisi minimal 2 kartu sebelum disimpan."; return; }
+  const n = hitungKartu(daftar);
+  if (n < 2) { $("statusRuang").textContent = "Daftar harus berisi minimal 2 kartu sebelum disimpan."; return; }
+  if (n > MAKS_KARTU) { $("statusRuang").textContent = "Satu ruang maksimal " + MAKS_KARTU + " kartu; daftar ini berisi " + n + " kartu. Kurangi dulu sebelum disimpan."; return; }
   let nama = $("namaRuang").value.trim();
-  if (!nama) nama = "Pertemuan " + (ruang.length + 1);
+  if (!nama) {
+    let maks = 0;
+    ruang.forEach(x => { const m = /^Pertemuan (\d+)$/.exec(x.nama); if (m) maks = Math.max(maks, parseInt(m[1], 10)); });
+    nama = "Pertemuan " + (maks + 1);
+  }
+  if (ruang.some(x => x.id !== sedangEdit && x.nama === nama)) {
+    $("statusRuang").textContent = "Nama \"" + nama + "\" sudah dipakai ruang lain. Buka ruang itu untuk memperbaruinya, atau pilih nama lain.";
+    return;
+  }
+  let pesan;
   if (sedangEdit) {
     const r = ruang.find(x => x.id === sedangEdit);
-    if (r) { r.nama = nama; r.daftar = daftar; r.jumlah = $("jumlahKartu").value; r.diubah = Date.now(); }
-    $("statusRuang").textContent = "Tersimpan, ruang \"" + nama + "\" diperbarui.";
+    if (r) { r.nama = nama; r.daftar = daftar; r.jumlah = $("jumlahKartu").value; r.label = $("jenisLabel").value; r.diubah = Date.now(); }
+    pesan = "Tersimpan, ruang \"" + nama + "\" diperbarui.";
   } else {
-    const r = { id: "r" + Date.now(), nama, daftar, jumlah: $("jumlahKartu").value, diubah: Date.now() };
+    const r = { id: "r" + Date.now() + "-" + acak(100000), nama, daftar, jumlah: $("jumlahKartu").value, label: $("jenisLabel").value, diubah: Date.now() };
     ruang.push(r);
     sedangEdit = r.id;
-    $("statusRuang").textContent = "Ruang baru \"" + nama + "\" tersimpan.";
+    pesan = "Ruang baru \"" + nama + "\" tersimpan.";
   }
   $("namaRuang").value = nama;
-  tulisRuang(); gambarRuang();
+  const ok = tulisRuang();
+  gambarRuang();
+  editorKotor = false;
+  $("statusRuang").textContent = ok ? pesan : "GAGAL tersimpan di perangkat (penyimpanan penuh atau mode privat). Ruang ini hanya ada di layar selama halaman terbuka.";
 };
 $("btnRuangBaru").onclick = () => {
+  const adaIsi = $("daftar").value.trim() !== "" || $("namaRuang").value.trim() !== "";
+  if (adaIsi && !window.confirm("Mulai ruang baru? Isi formulir sekarang akan dikosongkan; perubahan yang belum disimpan akan hilang.")) return;
   sedangEdit = null;
+  editorKotor = false;
   $("namaRuang").value = "";
   $("daftar").value = "";
   $("jumlahKartu").value = "";
+  $("jenisLabel").value = "kosakata";
   $("statusRuang").textContent = "Ruang baru: ketik daftar kartu dan namanya, lalu tekan Simpan Ruang.";
+  segarkanStatusIsi();
   $("daftar").focus();
 };
-muatRuang();
-gambarRuang();
+$("btnSalinCadangan").onclick = async () => {
+  const teks = JSON.stringify(ruang);
+  try {
+    await navigator.clipboard.writeText(teks);
+    $("statusCadangan").textContent = "Cadangan " + ruang.length + " ruang tersalin. Simpan teksnya di tempat aman.";
+  } catch (e) {
+    window.prompt("Salin teks cadangan ini:", teks);
+  }
+};
+$("btnPulihkanCadangan").onclick = () => {
+  const teks = window.prompt("Tempel teks cadangan ruang di sini. Semua ruang yang ada akan digantikan:");
+  if (!teks) return;
+  try {
+    const data = JSON.parse(teks);
+    if (!Array.isArray(data)) throw new Error("bukan daftar");
+    ruang = data;
+    sedangEdit = null;
+    sanitasiRuang();
+    const ok = tulisRuang();
+    gambarRuang();
+    $("statusCadangan").textContent = ok ? ruang.length + " ruang dipulihkan dari cadangan." : "Cadangan terbaca, tetapi gagal ditulis ke perangkat.";
+  } catch (e) {
+    $("statusCadangan").textContent = "Teks cadangan tidak terbaca; tidak ada yang diubah.";
+  }
+};
+function segarkanStatusIsi() {
+  if (document.body.classList.contains("sesiAktif")) return;
+  const n = hitungKartu($("daftar").value);
+  $("statusIsi").textContent = n + " kartu terisi. Tekan Mulai Sesi, atau ganti dulu daftarnya dengan kosakata dars apa pun." + (editorKotor ? " Ada perubahan yang belum disimpan sebagai ruang." : "");
+}
+["daftar", "namaRuang", "jumlahKartu"].forEach(id => $(id).addEventListener("input", () => { editorKotor = true; segarkanStatusIsi(); }));
+$("jenisLabel").addEventListener("change", () => { editorKotor = true; });
+window.addEventListener("beforeunload", e => {
+  if (document.body.classList.contains("sesiAktif") && $("areaTuntas").style.display === "none") { e.preventDefault(); e.returnValue = ""; }
+});
+try { muatRuang(); gambarRuang(); } catch (e) { ruang = []; }
+segarkanStatusIsi();
 
 function pasangTema(nama) {
   document.body.classList.remove("tema-zamrud", "tema-biru", "tema-terang");
@@ -552,6 +729,7 @@ pasangTema(temaAwal);
 
 $("btnAcak").onclick = async () => {
   if (sibuk) return;
+  if (terjawab) { $("statusSesi").textContent = "Nilai dulu kartu yang sedang terbuka sebelum mengacak."; return; }
   sibuk = true;
   bukaIdx = -1; terjawab = false;
   const kisi = $("kisiReview");
@@ -560,7 +738,7 @@ $("btnAcak").onclick = async () => {
   urutan = kocok(urutan);
   gambarReview();
   kisi.style.opacity = "1";
-  $("statusSesi").textContent = "Kartu diacak ulang. Progres tiap kartu tetap tersimpan; buka lagi satu kartu untuk lanjut.";
+  $("statusSesi").textContent = "Kartu diacak ulang. Progres tiap kartu tetap utuh; buka lagi satu kartu untuk lanjut.";
   sibuk = false;
 };
 
@@ -570,6 +748,9 @@ $("btnMainLagi").onclick = mulaiSesi;
 $("btnUlang").onclick = () => {
   const sesiJalan = $("kotakSesi").style.display !== "none" && $("areaTuntas").style.display === "none";
   if (sesiJalan && !window.confirm("Akhiri sesi sekarang? Kemajuan sesi ini akan hilang.")) return;
+  generasiSesi++;
+  simpanTerakhir();
+  sibuk = false;
   clearInterval(jamBelajar);
   document.body.classList.remove("sesiAktif");
   $("kotakSesi").style.display = "none";
